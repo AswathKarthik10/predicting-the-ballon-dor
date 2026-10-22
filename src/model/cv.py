@@ -146,14 +146,15 @@ def edition_metrics(utility: np.ndarray, points: np.ndarray) -> dict[str, float]
     correct = np.where(util_diff == 0, 0.5, ((util_diff > 0) == higher_points_first).astype(float))
     actual_top = set(np.argsort(-points, kind="stable")[:TOP_N_OVERLAP])
     predicted_top = set(np.argsort(-utility, kind="stable")[:TOP_N_OVERLAP])
-    rho = spearmanr(utility, points)[0] if np.ptp(utility) > 0 else np.nan
+    has_order = np.ptp(utility) > 0  # a constant utility (the uniform reference) has no meaningful top or rank
+    rho = spearmanr(utility, points)[0] if has_order else np.nan
     return {
         "heldout_ll": edition_loglik_per_voted(utility, ranking),
         "spearman": float(rho),
         "pairwise_acc": float(correct[differs].mean()),
-        "top1_hit": float(int(np.argmax(utility)) == winner),
-        "top3_overlap": float(len(actual_top & predicted_top)),
-        "winner_rank": float(1 + (utility > utility[winner]).sum()),
+        "top1_hit": float(int(np.argmax(utility)) == winner) if has_order else np.nan,
+        "top3_overlap": float(len(actual_top & predicted_top)) if has_order else np.nan,
+        "winner_rank": float(1 + (utility > utility[winner]).sum()) if has_order else np.nan,
     }
 
 

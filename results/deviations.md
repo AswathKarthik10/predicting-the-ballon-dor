@@ -22,7 +22,7 @@ data analysis (sections A-E of the notebook) but before any model was fitted or 
 | C11 | Raw (unstandardised) `major_titles`, `other_honors` and `prior_standing` are kept as columns for the naive baseline B0. | Spec: B0 uses raw values. |
 | C12 | Residualisation (F10, P2) is OLS with an intercept, fitted on the training-fold rows only and applied to the held-out edition; the residual is then re-z-scored within its own edition. | Spec section 3.1 and the leakage rule. |
 
-## Part 2. Planned clarifications for the modelling stage (recorded now, not yet applied)
+## Part 2. Clarifications for the modelling stage (recorded before the first CV run; applied in `src/model/cv.py` and `baselines.py`)
 
 | # | Planned clarification | Reason |
 | --- | --- | --- |
@@ -31,4 +31,6 @@ data analysis (sections A-E of the notebook) but before any model was fitted or 
 
 ## Part 3. Changes made after seeing results
 
-None.
+| # | Change | Effect on selection |
+| --- | --- | --- |
+| D1 | After the first cross-validation run (code commit `fbb3ff2`), the rank-based secondary metrics (top-1 hit, top-3 overlap, winner rank) of the uniform reference model U0 were set to NaN. With constant utilities these metrics only reflected tie-breaking by index (`winner_rank = 1`). | None. U0 is a reference, not a candidate; held-out log-likelihoods and all other models are unchanged. Labelled exploratory/reporting only. |

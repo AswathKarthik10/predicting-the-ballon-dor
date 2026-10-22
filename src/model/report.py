@@ -194,3 +194,40 @@ def plot_rank_shift(shifts: pd.DataFrame, path: Path, top_n: int) -> None:
     plt.tight_layout()
     plt.savefig(path, dpi=140)
     plt.close(fig)
+
+
+def plot_win_probability(t1: pd.DataFrame, t2: pd.DataFrame, path: Path, top_n: int) -> None:
+    merged = t1[["player_key", "player_name", "p_win"]].merge(t2[["player_key", "p_win"]], on="player_key", suffixes=("_T1", "_T2"))
+    merged["mean"] = merged[["p_win_T1", "p_win_T2"]].mean(axis=1)
+    top = merged.sort_values("mean", ascending=False).head(top_n).iloc[::-1]
+    y = np.arange(len(top))
+    fig, ax = plt.subplots(figsize=(8.5, 0.5 * top_n + 1.8))
+    ax.barh(y + 0.19, top["p_win_T1"], height=0.36, color="tab:blue", label="T1 (M1)")
+    ax.barh(y - 0.19, top["p_win_T2"], height=0.36, color="tab:orange", label="T2 (M2)")
+    ax.set_yticks(y)
+    ax.set_yticklabels(top["player_name"])
+    ax.set_xlabel("P(win), juror simulation (placeholder bias parameters)")
+    ax.set_title("2026 win probability: T1 vs T2, top 10")
+    ax.legend(loc="lower right")
+    plt.tight_layout()
+    plt.savefig(path, dpi=140)
+    plt.close(fig)
+
+
+def plot_rank_intervals(t1: pd.DataFrame, t2: pd.DataFrame, path: Path) -> None:
+    order = t1.sort_values("expected_rank")["player_name"].tolist()[::-1]
+    fig, ax = plt.subplots(figsize=(9, 9.5))
+    for table, color, shift, label in ((t1, "tab:blue", 0.17, "T1 (M1)"), (t2, "tab:orange", -0.17, "T2 (M2)")):
+        t = table.set_index("player_name").loc[order]
+        y = np.arange(len(t)) + shift
+        ax.errorbar(t["expected_rank"], y, xerr=[t["expected_rank"] - t["rank_p10"], t["rank_p90"] - t["expected_rank"]],
+                    fmt="o", color=color, capsize=2, markersize=4, label=label)
+    ax.set_yticks(range(len(order)))
+    ax.set_yticklabels(order)
+    ax.invert_xaxis()
+    ax.set_xlabel("expected rank (dot) with 80% interval; 1 = winner (axis reversed)")
+    ax.set_title("2026 expected ranks with 80% simulation intervals (placeholder juror bias)")
+    ax.legend(loc="lower left")
+    plt.tight_layout()
+    plt.savefig(path, dpi=140)
+    plt.close(fig)

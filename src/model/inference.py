@@ -1,0 +1,94 @@
+"""Final Plackett-Luce fit, parameter uncertainty and indicator importance (spec sections 6.1-6.2)."""
+
+from dataclasses import dataclass
+
+import numpy as np
+import pandas as pd
+
+from src.model import baselines, cv
+from src.model.cv import PlSpec
+from src.model.data import FORECAST_EDITION, TRAIN_EDITIONS, StudyData
+from src.model.pl import Ranking, build_ranking, fit_pl, penalised_hessian
+
+SEED = 7
+N_BOOTSTRAP = 500
+Z_90 = 1.6448536269514722
+TRAIN_LIST = list(TRAIN_EDITIONS)
+
+
+@dataclass(frozen=True)
+class FinalFit:
+    spec: PlSpec
+    beta: np.ndarray
+    lam: float
+    matrices: dict[int, np.ndarray]  # training editions and 2026
+    rankings: dict[int, Ranking]  # training editions only
+    covariance: np.ndarray  # inverse of the penalised Hessian
+
+    @property
+    def columns(self) -> list[str]:
+        return list(self.spec.columns)
+
+
+def final_fit(study: StudyData, spec: PlSpec) -> FinalFit:
+    """Fit on all four labelled editions; lambda by leave-one-edition-out over those four."""
+    lam = cv.tune_lambda(study, spec, TRAIN_LIST)
+    editions = TRAIN_LIST + [FORECAST_EDITION]
+    mats = baselines.design_matrices(study, spec.snapshot, list(spec.columns), spec.include_post, TRAIN_LIST, editions)
+    rankings = {ed: cv.ranking_of(study, ed) for ed in TRAIN_LIST}
+    xs = [mats[ed] for ed in TRAIN_LIST]
+    rks = [rankings[ed] for ed in TRAIN_LIST]
+    beta = fit_pl(xs, rks, lam)
+    covariance = np.linalg.inv(penalised_hessian(xs, rks, beta, lam))
+    return FinalFit(spec=spec, beta=beta, lam=lam, matrices=mats, rankings=rankings, covariance=covariance)
+
+
+def laplace_draws(fit: FinalFit, n_draws: int, rng: np.random.Generator) -> np.ndarray:
+    return rng.multivariate_normal(fit.beta, fit.covariance, size=n_draws)
+
+
+def laplace_summary(fit: FinalFit) -> pd.DataFrame:
+    se = np.sqrt(np.diag(fit.covariance))
+    return pd.DataFrame({"feature": fit.columns, "beta": fit.beta, "se_laplace": se,
+                         "laplace_lo90": fit.beta - Z_90 * se, "laplace_hi90": fit.beta + Z_90 * se})
+
+
+def bootstrap_betas(fit: FinalFit, study: StudyData, n_boot: int, rng: np.random.Generator) -> np.ndarray:
+    """Within-edition player bootstrap at the final lambda and fixed features (clarification S3)."""
+    points = {ed: baselines.points_of(study, ed) for ed in TRAIN_LIST}
+    draws = np.empty((n_boot, len(fit.beta)))
+    for b in range(n_boot):
+        xs: list[np.ndarray] = []
+        rks: list[Ranking] = []
+        for ed in TRAIN_LIST:
+            idx = rng.integers(0, len(points[ed]), len(points[ed]))
+            xs.append(fit.matrices[ed][idx])
+            rks.append(build_ranking(points[ed][idx]))
+        draws[b] = fit_pl(xs, rks, fit.lam)
+    return draws
+
+
+def coefficient_table(fit: FinalFit, study: StudyData, fold_coefs: pd.DataFrame, n_boot: int, seed: int) -> pd.DataFrame:
+    rng = np.random.default_rng(seed)
+    table = laplace_summary(fit)
+    boot = bootstrap_betas(fit, study, n_boot, rng)
+    table["bootstrap_lo90"] = np.percentile(boot, 5, axis=0)
+    table["bootstrap_hi90"] = np.percentile(boot, 95, axis=0)
+    table["bootstrap_sd"] = boot.std(axis=0, ddof=1)
+    folds = fold_coefs[fold_coefs["model"] == fit.spec.name].pivot(index="feature", columns="fold", values="beta")
+    table["same_sign_folds"] = [int((np.sign(folds.loc[f]) == np.sign(b)).sum()) for f, b in zip(table["feature"], table["beta"])]
+    table["lambda"] = fit.lam
+    contrib_train = np.vstack([fit.matrices[ed] for ed in TRAIN_LIST]) * fit.beta
+    contrib_2026 = fit.matrices[FORECAST_EDITION] * fit.beta
+    table["mean_abs_contribution_train"] = np.abs(contrib_train).mean(axis=0)
+    table["mean_abs_contribution_2026"] = np.abs(contrib_2026).mean(axis=0)
+    return table.sort_values("mean_abs_contribution_train", ascending=False).reset_index(drop=True)
+
+
+def comparison_forecast(study: StudyData, model_names: list[str]) -> pd.DataFrame:
+    """2026 predicted rank under every model, for transparency (U0 is not a model of interest)."""
+    frame = study.frame_t1[study.frame_t1["edition"] == FORECAST_EDITION][["player_key", "player_name"]].reset_index(drop=True)
+    for name in model_names:
+        utilities, _ = cv.predict_model(study, name, TRAIN_LIST, [FORECAST_EDITION])
+        frame[f"rank_{name}"] = pd.Series(utilities[FORECAST_EDITION]).rank(ascending=False, method="first").astype(int)
+    return frame

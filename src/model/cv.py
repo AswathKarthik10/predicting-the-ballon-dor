@@ -56,9 +56,8 @@ def ranking_of(study: StudyData, edition: int) -> Ranking:
     return build_ranking(baselines.points_of(study, edition))
 
 
-def predict_pl(study: StudyData, spec: PlSpec, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
-    """Fit a Plackett-Luce model on the training editions (lambda chosen by inner leave-one-edition-out) and
-    return utilities for the apply editions."""
+def tune_lambda(study: StudyData, spec: PlSpec, train: list[int]) -> float:
+    """Penalty chosen by inner leave-one-edition-out over the training editions (residualiser refit in every inner fold)."""
     columns = list(spec.columns)
     rankings = {ed: ranking_of(study, ed) for ed in train}
     inner = np.zeros((len(train), len(LAMBDA_GRID)))
@@ -68,7 +67,15 @@ def predict_pl(study: StudyData, spec: PlSpec, train: list[int], apply: list[int
         for j, lam in enumerate(LAMBDA_GRID):
             beta = fit_pl([mats[ed] for ed in inner_train], [rankings[ed] for ed in inner_train], lam)
             inner[i, j] = edition_loglik_per_voted(mats[held] @ beta, rankings[held])
-    lam_best = float(LAMBDA_GRID[int(np.argmax(inner.mean(axis=0)))])
+    return float(LAMBDA_GRID[int(np.argmax(inner.mean(axis=0)))])
+
+
+def predict_pl(study: StudyData, spec: PlSpec, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
+    """Fit a Plackett-Luce model on the training editions (lambda chosen by inner leave-one-edition-out) and
+    return utilities for the apply editions."""
+    columns = list(spec.columns)
+    rankings = {ed: ranking_of(study, ed) for ed in train}
+    lam_best = tune_lambda(study, spec, train)
     mats = baselines.design_matrices(study, spec.snapshot, columns, spec.include_post, train, sorted(set(train) | set(apply)))
     beta = fit_pl([mats[ed] for ed in train], [rankings[ed] for ed in train], lam_best)
     utilities = {ed: mats[ed] @ beta for ed in apply}

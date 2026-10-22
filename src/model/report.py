@@ -139,3 +139,58 @@ def write_all(study: StudyData, root: Path, results: CvResults, selection: Selec
     write_selection(study, root, results, summary, selection, root / "results" / "selection.md")
     plot_heldout_ll(results.metrics, root / "figures" / "heldout_ll_by_model.png")
     return summary
+
+
+def plot_coefficients(tables: dict[str, pd.DataFrame], path: Path) -> None:
+    fig, axes = plt.subplots(1, len(tables), figsize=(7.5 * len(tables), 6.2), sharex=True)
+    for ax, (name, table) in zip(np.atleast_1d(axes), tables.items()):
+        order = table.reindex(table["beta"].abs().sort_values().index)
+        y = np.arange(len(order))
+        ax.errorbar(order["beta"], y + 0.12, xerr=[order["beta"] - order["laplace_lo90"], order["laplace_hi90"] - order["beta"]],
+                    fmt="o", color="tab:blue", capsize=3, label="Laplace 90%")
+        ax.errorbar(order["beta"], y - 0.12, xerr=[order["beta"] - order["bootstrap_lo90"], order["bootstrap_hi90"] - order["beta"]],
+                    fmt="s", color="tab:orange", capsize=3, markersize=4, label="bootstrap 90%")
+        ax.axvline(0, color="k", linewidth=0.8)
+        ax.set_yticks(y)
+        ax.set_yticklabels(order["feature"])
+        ax.set_title(f"{name}: final-fit weights (within-edition z-scored features)")
+        ax.set_xlabel("Plackett-Luce weight")
+    np.atleast_1d(axes)[0].legend(loc="lower right")
+    plt.tight_layout()
+    plt.savefig(path, dpi=140)
+    plt.close(fig)
+
+
+def plot_contributions(table: pd.DataFrame, feature_cols: list[str], title: str, path: Path, top_n: int) -> None:
+    top = table.head(top_n).iloc[::-1]
+    colors = plt.get_cmap("tab20")(np.linspace(0, 1, len(feature_cols)))
+    fig, ax = plt.subplots(figsize=(10.5, 0.55 * top_n + 2))
+    pos_base = np.zeros(len(top))
+    neg_base = np.zeros(len(top))
+    for col, color in zip(feature_cols, colors):
+        values = top[col].to_numpy()
+        left = np.where(values >= 0, pos_base, neg_base)
+        ax.barh(top["player_name"], values, left=left, color=color, label=col, edgecolor="white", linewidth=0.3)
+        pos_base = pos_base + np.where(values >= 0, values, 0)
+        neg_base = neg_base + np.where(values < 0, values, 0)
+    ax.scatter(top["utility"], top["player_name"], color="k", zorder=5, s=28, label="utility (sum)")
+    ax.axvline(0, color="k", linewidth=0.8)
+    ax.set_xlabel("contribution to utility (beta x feature)")
+    ax.set_title(title)
+    ax.legend(fontsize=7, ncol=2, loc="lower right")
+    plt.tight_layout()
+    plt.savefig(path, dpi=140)
+    plt.close(fig)
+
+
+def plot_rank_shift(shifts: pd.DataFrame, path: Path, top_n: int) -> None:
+    movers = shifts.reindex(shifts["rank_change"].abs().sort_values(ascending=False).index).head(top_n).iloc[::-1]
+    fig, ax = plt.subplots(figsize=(8, 0.45 * top_n + 1.8))
+    colors = np.where(movers["rank_change"] > 0, "tab:green", "tab:red")
+    ax.barh(movers["player_name"], movers["rank_change"], color=colors)
+    ax.axvline(0, color="k", linewidth=0.8)
+    ax.set_xlabel("places gained in T2 versus T1 (negative = dropped)")
+    ax.set_title("Biggest rank movers between T1 (M1) and T2 (M2)")
+    plt.tight_layout()
+    plt.savefig(path, dpi=140)
+    plt.close(fig)

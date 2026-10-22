@@ -1,0 +1,14 @@
+# generated 2026-10-21
+Python 3.12.3
+ipykernel==7.4.0
+jupyter==1.1.1
+matplotlib==3.11.2
+nbconvert==7.17.2
+nbformat==5.11.1
+numpy==2.5.4
+pandas==3.0.6
+pytest==9.1.1
+scikit-learn==1.9.1
+scipy==1.18.1
+seaborn==0.13.2
+random_seed=7

@@ -2,7 +2,7 @@
 
 # sha256_t1=249bb1ac9a623070c0573e5f2f40d1536f0122d86ad5f33a91ce170363e64f31
 # sha256_t2=f9af1fd20747536eb06752cf202d0626c0ed55bd7f66507935ca83da27ad9cc0
-# git_commit=fbb3ff2
+# git_commit=36b162e
 
 Primary metric: mean held-out Plackett-Luce log-likelihood per voted player over four leave-one-edition-out folds (higher is better). No 2026 output was used.
 

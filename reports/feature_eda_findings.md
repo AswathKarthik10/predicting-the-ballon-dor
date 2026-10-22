@@ -154,7 +154,62 @@ Figures: `d_attention_persistence.png`, `d_attention_vs_points.png`, `d_partial_
 
 These are descriptive. They are not a forecast, and given section 4.4 they should not be read as predicting a higher finish.
 
-## 5. What this means for the preparation step
+## 5. How much do performance and attention explain, and does anyone miss out?
+
+Source: notebook section E. Exploratory, not model selection.
+
+### 5.1 Variance decomposition
+
+Inputs are grouped into five blocks: **Performance** (attack rate, ratings, big-stage output; 9 features), **Trophies and team success** (5), **Standing** (prior ballot rank, past podiums; 2), **Attention** (Wikipedia and news, pre-window and in-window; 4) and **Position** (1). For every subset of blocks I fitted a ridge regression (fixed alpha 10, no tuning) of the within-edition points percentile and scored it by **leave-one-edition-out R²** (out-of-sample). Each block's Shapley value (its average marginal gain over all block orderings) splits the total R² fairly when blocks overlap. 300 bootstrap draws (resampling within edition) give the 90% intervals.
+
+| Block | R² alone | Share of explained variance | 90% interval | Unique R² (loss if dropped) |
+| --- | --- | --- | --- | --- |
+| Trophies and team | 0.28 | **39%** | 24–67% | 0.20 |
+| Attention | 0.30 | **33%** | 18–55% | 0.16 |
+| Performance | 0.30 | **18%** | −4–30% | −0.02 |
+| Standing | 0.05 | 6% | −15–20% | 0.02 |
+| Position | 0.07 | 4% | −2–12% | −0.00 |
+| **All blocks** | | out-of-sample R² **0.63** (bootstrap 90%: 0.43–0.69; in-sample 0.73) | | |
+
+- About **two-thirds of the explainable variation sits in trophies/team success plus attention**, roughly equal in size and each larger than the pure performance block. Performance alone explains as much as attention alone (R² 0.30 each), but it shares a lot with the other blocks, and once trophies and attention are in the model it adds nothing out of sample (unique R² −0.02).
+- Removing attention costs a lot: out-of-sample R² falls from 0.63 to 0.47. Attention is not just a proxy for performance.
+- The ordering is stable across variants (points percentile or log points as the target; in-sample or out-of-sample): trophies/team 30–39%, attention 29–35%, performance 18–27%, standing 5–11%, position 3–4%.
+- The performance share has a wide interval that includes zero, so with 120 rows I would not claim performance matters less than attention in absolute terms. What the data does support is that **the stat-based performance block is not the dominant driver**.
+- Shares are attribution of overlapping information, not causal effects.
+
+### 5.2 Do better performers with less attention miss out?
+
+I built an out-of-sample **expected finish** from on-field information only (performance + trophies/team + position, no attention), and an **attention gap** for each player (their attention minus what that on-field profile predicts, also fitted on the other editions).
+
+| Expectation model | Spearman(attention gap, finish residual) | 90% CI | Per edition (2022 / 23 / 24 / 25) |
+| --- | --- | --- | --- |
+| On-field (performance + trophies/team + position) | **0.54** | 0.42–0.64 | 0.58 / 0.69 / 0.67 / 0.37 |
+| Performance only | 0.45 | 0.32–0.56 | 0.41 / 0.57 / 0.59 / 0.20 |
+
+Players with less attention than their on-field profile predicts finish below their expected placing, in all four editions.
+
+Of the 40 player-seasons the on-field model expects in the top 10 (4 editions × 10):
+
+| | n | Mean expected rank | Mean actual finish | Mean rank error | Finished top 10 |
+| --- | --- | --- | --- | --- | --- |
+| Attention at or above expectation | 16 | 5.4 | 4.9 | −0.5 | 94% |
+| Attention below expectation | 24 | 5.5 | **10.8** | **+5.2** | 54% |
+
+The same expected strength, but a 5-place gap in finishing position (Mann–Whitney one-sided p = 0.001).
+
+Specific cases (expected top 8, finished at least 6 places worse): Olise 2025 (expected 8th, finished 30th, attention rank 22nd), Fabián Ruiz 2025 (5th → 24th, attention 26th), Doué 2025 (2nd → 14th, attention 28th), Nkunku 2022 (8th → 20th, attention 30th), Lookman 2024 (8th → 14th), Gündoğan 2023 (3rd → 14th) and Kvaratskhelia 2025 (3rd → 12th). **All 7 had less attention than their profile predicts.** The reverse also holds: of 8 players expected 12th or worse who finished top 8 (Yamal 2025: 14th → 2nd; Carvajal, Salah, Haaland, Courtois, Osimhen, Hakimi, Palmer), 6 had above-expected attention.
+
+### 5.3 How to read this (important)
+
+- **Consistent with attention mattering, not proof of bias.** The attention gap is not independent of quality. If a player is better than my features capture (for example, creative output or influence the stats miss), that also raises both his attention and his finish. The 0.54 correlation therefore mixes "voters reward visibility" with "visibility tracks quality my features miss". The data cannot separate the two. Only the ballot data and an experiment-style design could.
+- **The in-window attention measure overlaps with the season itself.** It is also the measure with the strongest link to points. That is why section 4 (post-window attention) is the more targeted test for influence from *after* the eligibility window, and found no extra effect.
+- **Small samples at the extremes.** The top-10 comparison has 40 player-seasons and the named cases are individual anecdotes. They illustrate the pattern; the correlation and the 5-place gap carry the weight.
+- **2025 is again the weakest edition** (0.37), consistent with the other 2025 findings.
+- Answering the question directly: **yes, the data shows players with strong on-field profiles and below-expected attention finishing well below where they would be expected (in all four editions), and high-attention players overperforming.** Whether that is a voting bias or unmeasured quality is not identifiable from these data alone.
+
+Figures: `e_variance_decomposition.png`, `e_missing_out.png`.
+
+## 6. What this means for the preparation step
 
 - **Constant columns.** Edition-level z-scoring needs a rule for zero variance (z = 0): 2025 tournament features and 2025 `post_npxg_xa_p90` shrunk values are both constant.
 - **Decisions needed, logged in `results/deviations.md`:** the `playoff` ordinal; z-score ddof (I used ddof = 1); and the zero-for-non-participants rule for tournament counts.
@@ -162,7 +217,7 @@ These are descriptive. They are not a forecast, and given section 4.4 they shoul
 - **F10 and P2** (the residualised attention features) must be fit per training fold, as the spec requires. The partial-correlation results above are *not* a substitute and must not feed the CV.
 - **Collinearity among attention inputs** supports residualising attention on F1–F7, as the spec already does.
 
-## 6. Limitations
+## 7. Limitations
 
 - Four labelled editions and 120 rows. Many significance tests are exploratory; effect sizes and sign consistency matter more than p-values.
 - 2025 behaves differently (no tournament, no post-window form, weaker attention link), so pooled numbers lean on 2022–24.

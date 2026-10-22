@@ -2,7 +2,7 @@
 
 # sha256_t1=249bb1ac9a623070c0573e5f2f40d1536f0122d86ad5f33a91ce170363e64f31
 # sha256_t2=f9af1fd20747536eb06752cf202d0626c0ed55bd7f66507935ca83da27ad9cc0
-# git_commit=36b162e
+# git_commit=ddf5a7e
 
 These are the model's arithmetic, not causes. Every feature is a within-edition z-score, so a contribution is measured against the average 2026 nominee. The explanation is read-only: nothing here is used to tune or change the model.
 

@@ -12,3 +12,6 @@ scikit-learn==1.9.1
 scipy==1.18.1
 seaborn==0.13.2
 random_seed=7
+
+# xgboost in this venv needed a local patch to find the libomp bundled with scikit-learn:
+# symlink xgboost/lib/libomp.dylib -> sklearn/.dylibs/libomp.dylib, add rpath @loader_path to libxgboost.dylib, ad-hoc codesign.

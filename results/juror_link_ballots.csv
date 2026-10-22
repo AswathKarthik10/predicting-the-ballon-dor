@@ -1,0 +1,14 @@
+# sha256_t1=249bb1ac9a623070c0573e5f2f40d1536f0122d86ad5f33a91ce170363e64f31
+# sha256_fact_bdo_country_votes=2cdfaa58a5ba83505eedfa9366add2dcf8d8cd2bb03b5ecd555f3c73bbef5920
+# sha256_fact_juror_nations=3cdd55cd1e1c86ffd0e4395ae20c94c3e2236fac11abcbf70ce5bbfb258070bb
+# sha256_dim_country=ed8fa9634bd088cfef5783212f2e2bb8db6050e8e949e4f40211ec2064f3083f
+# sha256_dim_player=f5fe0f6a9d0fe7c02a6dcd34d8e7ae93d2d4a9b9c0f31eef1b766cc71a9b0d90
+# sha256_fact_bdo_results=f6ecfe365fd0a2b9f51d7023077938a83417735ae1c2419a9709d6a491ad86a2
+# sha256_dim_league_context=abc18fc4e497399d62090fbe7b6e1b725d7ebbcaff8d1cf49db283e75b81a239
+# sha256_dim_club=ad7268f198eb21a7718488f242587d01c0c670add3afb3ddaa29a9648c5d503a
+# git_commit=9fb34fc
+# seed=7
+# alpha from the main ballot fit; strengths are out-of-fold
+snapshot,model,editions,k,sigma_shared,r2_within_edition,n_player_editions
+T1,M1,2022-2023-2024-2025,1.5878061778628796,1.6641255655526535,0.573129698468474,120
+T2,M2,2022-2023-2024-2025,1.5374049520032342,1.7520212972927485,0.5268459979534492,120

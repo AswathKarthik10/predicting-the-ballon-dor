@@ -1,7 +1,9 @@
-"""Juror panel construction from the dataset columns (spec 6.3 fallback; see deviations.md S1, S2, S8).
+"""Juror panels for the simulation (spec 6.3).
 
-No individual ballots or juror nation lists exist, so the panel is rebuilt from `jurors_same_nation`,
-`jurors_same_confed` and `jurors_league_country`. The bias parameters are PLACEHOLDERS, not estimates.
+`build_jurors` / `build_sim_inputs` rebuild a panel from summary columns and use PLACEHOLDER bias values; they were the
+first run, written under the mistaken belief that no ballots existed (deviations.md S1, S8, B1). Ballots and the real
+juror nation lists do exist (data/jury/): `real_jury` and `build_real_sim_inputs` use the real panel, and the bias values
+for that panel are estimated from the ballots in `src/model/ballots.py`.
 """
 
 from dataclasses import dataclass
@@ -27,6 +29,17 @@ LEAGUE_COUNTRY: dict[int, str] = {47: "England", 53: "France", 54: "Germany", 55
 JURORS_BY_EDITION: dict[int, int] = {2022: 93, 2023: 92, 2024: 99, 2025: 100, 2026: 100}
 JUROR_COLUMNS: tuple[str, ...] = ("edition", "player_key", "nationality", "league_key", "jurors_same_nation",
                                   "jurors_same_confed", "jurors_league_country")
+JURY_DIR = Path("data") / "jury"
+VOTES_FILE = "fact_bdo_country_votes.parquet"
+NATIONS_FILE = "fact_juror_nations.parquet"
+COUNTRY_FILE = "dim_country.parquet"
+PLAYER_FILE = "dim_player.parquet"
+RESULTS_FILE = "fact_bdo_results.parquet"
+LEAGUE_FILE = "dim_league_context.parquet"
+CLUB_FILE = "dim_club.parquet"
+JURY_FILES: tuple[str, ...] = (VOTES_FILE, NATIONS_FILE, COUNTRY_FILE, PLAYER_FILE, RESULTS_FILE, LEAGUE_FILE, CLUB_FILE)
+# league_key 130 (MLS) is absent from dim_league_context; mapped by hand (deviation B3).
+MANUAL_LEAGUE_COUNTRY: dict[str, str] = {"130": "c_usa"}
 PLACEHOLDER_LABEL = "PLACEHOLDER (no juror ballots available; not estimated)"
 
 
@@ -119,3 +132,57 @@ def build_sim_inputs(players: pd.DataFrame, n_jurors: int) -> SimInputs:
 
 def edition_players(juror_inputs: pd.DataFrame, edition: int) -> pd.DataFrame:
     return juror_inputs[juror_inputs["edition"] == edition].reset_index(drop=True)
+
+
+@dataclass(frozen=True)
+class RealJuror:
+    country_key: str
+    confederation: str
+
+
+@dataclass(frozen=True)
+class PlayerAttributes:
+    player_keys: tuple[str, ...]  # snapshot row order for the edition
+    nationality_country: tuple[str, ...]
+    confederation: tuple[str, ...]
+    league_country: tuple[str, ...]
+
+
+def real_jury(root: Path, edition: int) -> list[RealJuror]:
+    """The edition's juror nations from fact_juror_nations, sorted by country key. Past editions keep only the nations that
+    voted (93/92/99/100); 2026 has `voted` unknown, so all 100 nations are returned."""
+    nations = pd.read_parquet(root / JURY_DIR / NATIONS_FILE)
+    rows = nations[(nations["edition"] == edition) & (nations["voted"] != False)].sort_values("country_key")  # noqa: E712
+    return [RealJuror(country_key=c, confederation=f) for c, f in zip(rows["country_key"], rows["confederation"])]
+
+
+def league_country_map(leagues: pd.DataFrame) -> dict[str, str]:
+    """league_key (string) -> country_key. Rows with a null league_key (2 of 295) are dropped; the rest map one-to-one."""
+    pairs = leagues[["league_key", "country_key"]].dropna(subset=["league_key"]).drop_duplicates()
+    if pairs["league_key"].duplicated().any():
+        raise ValueError("a league_key maps to more than one country in dim_league_context")
+    return {**dict(zip(pairs["league_key"], pairs["country_key"])), **MANUAL_LEAGUE_COUNTRY}
+
+
+def player_attributes(root: Path, edition: int) -> PlayerAttributes:
+    """Nationality country, confederation and league country of an edition's nominees, in snapshot row order."""
+    rows = edition_players(load_juror_inputs(root), edition)
+    players = pd.read_parquet(root / JURY_DIR / PLAYER_FILE).set_index("player_key")["nationality_country_key"]
+    confed = pd.read_parquet(root / JURY_DIR / COUNTRY_FILE).set_index("country_key")["confederation"]
+    league_map = league_country_map(pd.read_parquet(root / JURY_DIR / LEAGUE_FILE))
+    nationality = rows["player_key"].map(players)
+    league = rows["league_key"].astype(int).astype(str).map(league_map)
+    if nationality.isna().any() or league.isna().any():
+        raise ValueError(f"edition {edition}: nominees without a nationality or league country")
+    return PlayerAttributes(player_keys=tuple(rows["player_key"]), nationality_country=tuple(nationality),
+                            confederation=tuple(nationality.map(confed)), league_country=tuple(league))
+
+
+def build_real_sim_inputs(jury: list[RealJuror], players: PlayerAttributes) -> SimInputs:
+    """Match matrices for the real panel. confed_match excludes home, as in the ballot model (spec section 2)."""
+    juror_country = np.array([j.country_key for j in jury])
+    juror_confed = np.array([j.confederation for j in jury])
+    nation_match = juror_country[:, None] == np.array(players.nationality_country)[None, :]
+    same_confed = juror_confed[:, None] == np.array(players.confederation)[None, :]
+    return SimInputs(nation_match=nation_match, confed_match=same_confed & ~nation_match,
+                     league_match=juror_country[:, None] == np.array(players.league_country)[None, :], n_jurors=len(jury))

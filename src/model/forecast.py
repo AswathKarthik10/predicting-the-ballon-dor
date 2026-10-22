@@ -34,6 +34,13 @@ def oof_utilities(study: StudyData, edition: int) -> np.ndarray:
     return utilities[edition]
 
 
+def oof_utilities_for(study: StudyData, model: str, edition: int) -> np.ndarray:
+    """Out-of-fold utilities of any model (M1 on T1, M2 on T2) for a labelled edition; rows follow study.frame_t1."""
+    train = [ed for ed in TRAIN_EDITIONS if ed != edition]
+    utilities, _ = cv.predict_model(study, model, train, [edition])
+    return utilities[edition]
+
+
 def calibrate_tau_juror(study: StudyData, juror_inputs: pd.DataFrame, n_sims: int, seed: int) -> Calibration:
     rows: list[dict[str, object]] = []
     for edition in CALIBRATION_EDITIONS:
@@ -60,15 +67,19 @@ def simulate_snapshot(fit: inference.FinalFit, inputs: jurors.SimInputs, config:
     return simulate.summarise(simulate.simulate(strengths, inputs, config, rng))
 
 
-def forecast_table(study: StudyData, fit: inference.FinalFit, inputs: jurors.SimInputs, config: simulate.SimConfig,
-                   n_sims: int, seed: int) -> pd.DataFrame:
-    sim = simulate_snapshot(fit, inputs, config, n_sims, seed)
+def assemble_forecast_table(study: StudyData, fit: inference.FinalFit, sim: pd.DataFrame) -> pd.DataFrame:
+    """Attach player identity and utility contributions to a simulation summary and rank by expected rank."""
     keys = study.frame_t1[study.frame_t1["edition"] == FORECAST_EDITION][["player_key", "player_name", "nationality"]].reset_index(drop=True)
     contrib = explain.contribution_table(study, fit, FORECAST_EDITION).drop(columns="player_name")
     table = pd.concat([keys, sim], axis=1).merge(contrib, on="player_key")
     table = table.sort_values(["expected_rank", "p_win"], ascending=[True, False]).reset_index(drop=True)
     table.insert(0, "forecast_rank", np.arange(1, len(table) + 1))
     return table
+
+
+def forecast_table(study: StudyData, fit: inference.FinalFit, inputs: jurors.SimInputs, config: simulate.SimConfig,
+                   n_sims: int, seed: int) -> pd.DataFrame:
+    return assemble_forecast_table(study, fit, simulate_snapshot(fit, inputs, config, n_sims, seed))
 
 
 def sensitivity_scenarios(best_tau_juror: float) -> list[tuple[str, simulate.SimConfig]]:

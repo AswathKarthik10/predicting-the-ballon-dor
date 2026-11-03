@@ -5,11 +5,13 @@ kept in a separate frame so the feature code never sees them.
 """
 
 import hashlib
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
 
+from src.model.awards_v2_1 import EVENTS_FILE, attach_award_columns
 from src.model.features import EDITION_COL, V1_FEATURES, FeatureSet, build_base_features, build_post_features
 from src.model.features_v2 import (MAIN_OPTIONS, V2_FEATURES, V2_POST_FEATURES, FeatureOptions, build_base_features_with,
                                    build_post_features_v2)
@@ -17,6 +19,7 @@ from src.model.features_v2 import (MAIN_OPTIONS, V2_FEATURES, V2_POST_FEATURES, 
 T1_FILE = "player_snapshot_t1.csv"
 T2_FILE = "player_snapshot_t2.csv"
 V2_DIR = Path("data") / "v2"
+V2_1_DIR = Path("data") / "v2_1"
 KEY_COLS: tuple[str, ...] = ("edition", "player_key")
 TARGET_COLS: tuple[str, ...] = ("bdo_points", "bdo_rank", "vote_share")
 SNAPSHOT_COLS: tuple[str, ...] = ("snapshot", "snapshot_date")
@@ -181,13 +184,26 @@ def load_study_v2(root: Path) -> StudyData:
 
 def load_study_v2_variant(root: Path, spec: StudySpec, options: FeatureOptions, features: FeatureSet) -> StudyData:
     """The T1-only study restricted to `spec.t1_editions`, with swappable source columns (robustness runs)."""
+    return load_study_with_t1_columns(root, spec, options, features, lambda t1: t1)
+
+
+def load_study_v2_1(root: Path, spec: StudySpec, options: FeatureOptions, features: FeatureSet) -> StudyData:
+    """Like the variant loader, with the raw v2.1 award score attached to the T1 rows (options.awards must be set)."""
+    if options.awards is None:
+        raise ValueError("load_study_v2_1 needs options.awards")
+    events = pd.read_parquet(root / V2_1_DIR / EVENTS_FILE)
+    return load_study_with_t1_columns(root, spec, options, features, lambda t1: attach_award_columns(t1, events, options.awards))
+
+
+def load_study_with_t1_columns(root: Path, spec: StudySpec, options: FeatureOptions, features: FeatureSet,
+                               prepare: Callable[[pd.DataFrame], pd.DataFrame]) -> StudyData:
     path_t1 = root / V2_DIR / T1_FILE
     t1 = pd.read_csv(path_t1)
     t1 = t1[t1[EDITION_COL].isin(spec.t1_editions)].reset_index(drop=True)
     check_t1(t1, spec)
     check_edition_facts(t1)
     identity = t1[list(IDENTITY_COLS)]
-    base = build_base_features_with(t1, options)
+    base = build_base_features_with(prepare(t1), options)
     frame_t1 = pd.concat([identity, base.drop(columns=[EDITION_COL])], axis=1)
     return StudyData(frame_t1=frame_t1, frame_t2=None, targets=t1[list(TARGET_COLS)].copy(), sha256_t1=sha256_of(path_t1),
                      sha256_t2="", labelled_editions=spec.labelled_editions, forecast_edition=spec.forecast_edition,

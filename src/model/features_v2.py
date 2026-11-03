@@ -10,6 +10,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
+from src.model.awards_v2_1 import BEST_IS_WC_COLUMN, SCORE_COLUMN, AwardVariant, f11_values
 from src.model.features import (DEFENDER, EDITION_COL, GOALKEEPER, POST_FEATURES, POST_RESIDUALISER_REGRESSORS, PRIOR_RANK_BASE,
                                 FeatureParams, FeatureSet, apply_residualiser, build_post_features_for, fit_residualiser,
                                 impute_club_rating, require_columns, stage_ordinal, zscore_with_reference, zscore_within_edition)
@@ -63,11 +64,12 @@ class FeatureOptions:
     club_attack_column: str
     intl_attack_column: str
     league_award_column: str
+    awards: AwardVariant | None  # None: the v2 award count; otherwise the weighted score of awards_v2_1
 
 
-MAIN_OPTIONS = FeatureOptions("club_npga_p90_opp_adj", "intl_npga_p90_opp_adj", "league_player_of_season")
-XG_OPTIONS = FeatureOptions("club_npxg_xa_p90_opp_adj", "intl_npxg_xa_p90_opp_adj", "league_player_of_season")
-LEAGUE_POTY_OPTIONS = FeatureOptions("club_npga_p90_opp_adj", "intl_npga_p90_opp_adj", "league_poty")
+MAIN_OPTIONS = FeatureOptions("club_npga_p90_opp_adj", "intl_npga_p90_opp_adj", "league_player_of_season", None)
+XG_OPTIONS = FeatureOptions("club_npxg_xa_p90_opp_adj", "intl_npxg_xa_p90_opp_adj", "league_player_of_season", None)
+LEAGUE_POTY_OPTIONS = FeatureOptions("club_npga_p90_opp_adj", "intl_npga_p90_opp_adj", "league_poty", None)
 EA_COLUMN = "ea_rating_z"
 GATE_COLUMN = "trophy_gate"
 TOURNAMENT_INTERACTION = "tourn_ko_x_world_cup"
@@ -151,7 +153,12 @@ def build_base_features_with(df: pd.DataFrame, options: FeatureOptions) -> pd.Da
     out["F7_prior_standing"] = zscore_within_edition(prior_standing, ed, "prior_standing")
     out["F8_defending_winner"] = df["is_defending_winner"].astype(float)
     out["F9_fame"] = zscore_within_edition(np.log1p(df["wiki_views_pre_juror_w"]), ed, "fame")
-    out["F11_individual_awards"] = zscore_within_edition(individual_awards_raw_with(df, options), ed, "individual_awards")
+    if options.awards is None:
+        out["F11_individual_awards"] = zscore_within_edition(individual_awards_raw_with(df, options), ed, "individual_awards")
+    else:
+        require_columns(df, (SCORE_COLUMN, BEST_IS_WC_COLUMN), "build_base_features_with")
+        out["F11_individual_awards"] = f11_values(df[SCORE_COLUMN], ed, options.awards, zscore_within_edition)
+        out[BEST_IS_WC_COLUMN] = df[BEST_IS_WC_COLUMN]
     out["F12_market_value"] = zscore_within_edition(np.log(market_value_at_t1(df)), ed, "market_value")
     ea = df["ea_overall_t1"].astype(float)
     out[EA_COLUMN] = zscore_within_edition(ea.where(ea.notna(), ea.groupby(ed).transform("mean")), ed, "ea_rating")
@@ -209,6 +216,8 @@ def assemble_features_v2(frame: pd.DataFrame, params: FeatureParams, include_pos
     out[TOURNAMENT_INTERACTION] = frame["tourn_ko_z"] * frame["is_world_cup"]
     out["golden_ball_score"] = frame["golden_ball_score"]
     out[EA_COLUMN] = frame[EA_COLUMN]
+    if BEST_IS_WC_COLUMN in frame.columns:
+        out[BEST_IS_WC_COLUMN] = frame[BEST_IS_WC_COLUMN]
     return out
 
 

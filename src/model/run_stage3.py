@@ -89,11 +89,11 @@ def write_selection(path: Path, header: list[str], summary: pd.DataFrame, interv
     path.write_text("\n".join(lines) + "\n")
 
 
-def main(root: Path) -> None:
+def backtest(root: Path, study: StudyData, out: Path, suffix: str, header_note: str) -> cv.CvResults:
+    """Stage 3 for any ten-edition study; `suffix` is appended to the metrics file names (v2: none)."""
     started = time.time()
-    study = load_study_v2(root)
     folds = list(study.labelled_editions)
-    out = root / OUT_DIR
+    out.mkdir(parents=True, exist_ok=True)
     results = cv.run_cross_validation(study, FULL_MODELS)
     metrics = pd.concat([results.metrics, run_season4(study)], ignore_index=True)
     print(f"cross-validation done in {time.time() - started:.0f}s", flush=True)
@@ -110,17 +110,22 @@ def main(root: Path) -> None:
 
     mean_ll = summary[summary["metric"] == "heldout_ll"].set_index("model")["mean_all"].to_dict()
     selection = validation_v2.apply_selection_rule({m: v for m, v in mean_ll.items() if m in FULL_MODELS})
-    header = [f"<!-- sha256_t1={study.sha256_t1} git_commit={report.git_commit(root)} -->"]
+    header = [f"<!-- sha256_t1={study.sha256_t1} git_commit={report.git_commit(root)} -->"] + ([header_note] if header_note else [])
 
-    metrics.to_csv(out / "metrics_by_fold.csv", index=False)
+    metrics.to_csv(out / f"metrics_by_fold{suffix}.csv", index=False)
     joined = summary.merge(intervals.pivot_table(index=["model", "metric"], columns="subset", values=["lo90", "hi90"]).pipe(
         lambda d: d.set_axis([f"{a}_{b}" for a, b in d.columns], axis=1)).reset_index(), on=["model", "metric"], how="left")
-    joined.to_csv(out / "metrics_summary.csv", index=False)
+    joined.to_csv(out / f"metrics_summary{suffix}.csv", index=False)
     paired.to_csv(out / "paired_vs_M1.csv", index=False)
     results.tuning.to_csv(out / "tuning_by_fold.csv", index=False)
     results.coefficients.to_csv(out / "coefficients_by_fold.csv", index=False)
     write_selection(out / "selection.md", header, summary, intervals, paired, selection, folds, results.tuning, results.coefficients)
     print(f"done in {time.time() - started:.0f}s; published model {selection.published}", flush=True)
+    return results
+
+
+def main(root: Path) -> None:
+    backtest(root, load_study_v2(root), root / OUT_DIR, "", "")
 
 
 if __name__ == "__main__":

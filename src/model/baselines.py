@@ -6,7 +6,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import Ridge
 
 from src.model.data import StudyData
-from src.model.features import assemble_features, fit_feature_params, m1_columns
 
 SEED = 7
 SHARE_FLOOR = 1e-4
@@ -37,13 +36,13 @@ def design_matrices(study: StudyData, snapshot: str, columns: list[str], include
     """Feature matrices per edition. Residualisation is fitted on the training editions only."""
     frame = study.frame_t1 if snapshot == "t1" else study.frame_t2
     train = frame[frame["edition"].isin(train_editions)]
-    params = fit_feature_params(train, include_post)
-    matrix = assemble_features(frame, params, include_post)[columns]
+    params = study.features.fit_params(train, include_post)
+    matrix = study.features.assemble(frame, params, include_post)[columns]
     return {ed: matrix[(frame["edition"] == ed).to_numpy()].to_numpy(dtype=float) for ed in edition_list}
 
 
 def m1_matrices(study: StudyData, train_editions: list[int], edition_list: list[int]) -> dict[int, np.ndarray]:
-    return design_matrices(study, "t1", m1_columns(), False, train_editions, edition_list)
+    return design_matrices(study, "t1", list(study.features.base_columns), False, train_editions, edition_list)
 
 
 def naive_scores(study: StudyData, apply_editions: list[int]) -> dict[int, np.ndarray]:

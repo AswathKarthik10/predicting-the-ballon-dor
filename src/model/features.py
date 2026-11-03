@@ -5,6 +5,7 @@ vote result into the features is impossible by construction.
 """
 
 from dataclasses import dataclass
+from typing import Callable
 
 import numpy as np
 import pandas as pd
@@ -23,6 +24,11 @@ STAGE_ORDINAL: dict[str, int] = {
     "winner": 7,
 }
 WINDOW_END: dict[int, pd.Timestamp] = {
+    2016: pd.Timestamp("2016-11-11"),
+    2017: pd.Timestamp("2017-11-06"),
+    2018: pd.Timestamp("2018-11-02"),
+    2019: pd.Timestamp("2019-11-01"),
+    2021: pd.Timestamp("2021-10-29"),
     2022: pd.Timestamp("2022-07-31"),
     2023: pd.Timestamp("2023-07-31"),
     2024: pd.Timestamp("2024-07-31"),
@@ -32,6 +38,7 @@ WINDOW_END: dict[int, pd.Timestamp] = {
 GOALKEEPER = "GK"
 DEFENDER = "DEF"
 POST_SHRINK_MINUTES = 450.0
+POST_FORM_COLUMN_V1 = "post_npxg_xa_p90_opp_adj"
 RATING_IMPUTE_QUANTILE = 0.05
 FINAL_WINDOW_DAYS = 14.0
 PRIOR_RANK_BASE = 31
@@ -195,15 +202,20 @@ def days_since_window_end(df: pd.DataFrame) -> pd.Series:
 
 def build_post_features(df: pd.DataFrame) -> pd.DataFrame:
     """Post-window block (T2 rows only): P1, P3 and the unresidualised post-window attention change."""
-    require_columns(df, REQUIRED_POST_COLUMNS + (EDITION_COL,), "build_post_features")
+    return build_post_features_for(df, POST_FORM_COLUMN_V1)
+
+
+def build_post_features_for(df: pd.DataFrame, form_column: str) -> pd.DataFrame:
+    """Post-window block with P1 built from `form_column` (v1: npxG + xA per 90; v2: non-penalty goals + assists per 90)."""
+    require_columns(df, tuple(c for c in REQUIRED_POST_COLUMNS if c != POST_FORM_COLUMN_V1) + (form_column, EDITION_COL), "build_post_features")
     ed = df[EDITION_COL]
     days_post = days_since_window_end(df)
 
     out = pd.DataFrame(index=df.index)
-    value = df["post_npxg_xa_p90_opp_adj"]
+    value = df[form_column]
     edition_mean = value.groupby(ed).transform("mean")
     if edition_mean.isna().any():
-        raise ValueError("an edition has no non-null post_npxg_xa_p90_opp_adj values")
+        raise ValueError(f"an edition has no non-null {form_column} values")
     weight = (df["post_minutes"] / (df["post_minutes"] + POST_SHRINK_MINUTES)).where(value.notna(), 0.0)
     shrunk = weight * value.fillna(0.0) + (1 - weight) * edition_mean
     out["P1_post_form"] = zscore_within_edition(shrunk, ed, "post_form")
@@ -274,3 +286,23 @@ def m1_columns() -> list[str]:
 
 def m2_columns() -> list[str]:
     return m1_columns() + list(POST_FEATURES)
+
+
+@dataclass(frozen=True)
+class FeatureSet:
+    """A feature recipe: how parameters are learned on training rows, how the model matrix is assembled, and which
+    columns each Plackett-Luce model uses. Lets the same cross-validation code run on the v1 and v2 features."""
+    name: str
+    fit_params: Callable[[pd.DataFrame, bool], FeatureParams]
+    assemble: Callable[[pd.DataFrame, FeatureParams, bool], pd.DataFrame]
+    base_columns: tuple[str, ...]  # columns of the shared model matrix used by B1, B2, X1, L1, O1, D1
+    model_columns: dict[str, tuple[str, ...]]  # Plackett-Luce model name to its columns
+
+
+V1_FEATURES = FeatureSet(
+    name="v1",
+    fit_params=fit_feature_params,
+    assemble=assemble_features,
+    base_columns=tuple(m1_columns()),
+    model_columns={"M1": tuple(m1_columns()), "M1-G": tuple(m1_columns()) + ("trophy_gate",), "M2": tuple(m2_columns())},
+)

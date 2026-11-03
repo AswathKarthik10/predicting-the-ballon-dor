@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from src.model import baselines, cv, explain, inference, jurors, simulate
-from src.model.data import FORECAST_EDITION, TRAIN_EDITIONS, StudyData
+from src.model.data import FORECAST_EDITION, StudyData
 from src.model.jurors import BiasParams, PLACEHOLDER_BIAS
 
 SEED = 7
@@ -29,14 +29,14 @@ class Calibration:
 
 def oof_utilities(study: StudyData, edition: int) -> np.ndarray:
     """M1 utilities for a labelled edition from a model that never saw that edition."""
-    train = [ed for ed in TRAIN_EDITIONS if ed != edition]
+    train = [ed for ed in study.labelled_editions if ed != edition]
     utilities, _ = cv.predict_model(study, "M1", train, [edition])
     return utilities[edition]
 
 
 def oof_utilities_for(study: StudyData, model: str, edition: int) -> np.ndarray:
     """Out-of-fold utilities of any model (M1 on T1, M2 on T2) for a labelled edition; rows follow study.frame_t1."""
-    train = [ed for ed in TRAIN_EDITIONS if ed != edition]
+    train = [ed for ed in study.labelled_editions if ed != edition]
     utilities, _ = cv.predict_model(study, model, train, [edition])
     return utilities[edition]
 

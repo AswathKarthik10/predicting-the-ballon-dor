@@ -1,0 +1,10 @@
+model,subset,n_players,mean_residual,mean_abs_residual
+M1 without F11,all tournament editions,133,-0.3533834586466165,5.541353383458647
+M1 without F11,"World Cup editions (2018, 2023)",50,-0.62,5.38
+M1 without F11,Euro and Copa editions,83,-0.1927710843373494,5.63855421686747
+M1,all tournament editions,133,-0.03759398496240601,4.834586466165414
+M1,"World Cup editions (2018, 2023)",50,-0.36,4.24
+M1,Euro and Copa editions,83,0.1566265060240964,5.192771084337349
+M1 with tournament interaction,all tournament editions,133,-0.045112781954887216,4.87218045112782
+M1 with tournament interaction,"World Cup editions (2018, 2023)",50,-0.38,4.22
+M1 with tournament interaction,Euro and Copa editions,83,0.1566265060240964,5.265060240963855

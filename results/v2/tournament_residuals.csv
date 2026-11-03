@@ -1,0 +1,400 @@
+model,edition,player_name,is_world_cup,predicted_rank,actual_rank,residual
+M1 without F11,2016,Manuel Neuer,0.0,12.0,20.0,8.0
+M1 without F11,2016,Cristiano Ronaldo,0.0,2.0,1.0,-1.0
+M1 without F11,2016,Sergio Agüero,0.0,13.0,20.0,7.0
+M1 without F11,2016,Paul Pogba,0.0,10.0,14.0,4.0
+M1 without F11,2016,Toni Kroos,0.0,14.0,17.0,3.0
+M1 without F11,2016,Robert Lewandowski,0.0,6.0,16.0,10.0
+M1 without F11,2016,Gareth Bale,0.0,3.0,6.0,3.0
+M1 without F11,2016,Hugo Lloris,0.0,27.0,20.0,-7.0
+M1 without F11,2016,Arturo Vidal,0.0,8.0,14.0,6.0
+M1 without F11,2016,Diego Godín,0.0,30.0,20.0,-10.0
+M1 without F11,2016,Koke,0.0,29.0,20.0,-9.0
+M1 without F11,2016,Rui Patrício,0.0,28.0,12.0,-16.0
+M1 without F11,2016,Kevin De Bruyne,0.0,16.0,20.0,4.0
+M1 without F11,2016,Dimitri Payet,0.0,25.0,17.0,-8.0
+M1 without F11,2016,Thomas Müller,0.0,9.0,20.0,11.0
+M1 without F11,2016,Andrés Iniesta,0.0,15.0,20.0,5.0
+M1 without F11,2016,Antoine Griezmann,0.0,11.0,3.0,-8.0
+M1 without F11,2016,Zlatan Ibrahimović,0.0,5.0,13.0,8.0
+M1 without F11,2016,Sergio Ramos,0.0,17.0,20.0,3.0
+M1 without F11,2016,Luka Modrić,0.0,19.0,17.0,-2.0
+M1 without F11,2016,Gonzalo Higuaín,0.0,20.0,20.0,0.0
+M1 without F11,2016,Pepe,0.0,21.0,9.0,-12.0
+M1 without F11,2016,Jamie Vardy,0.0,23.0,8.0,-15.0
+M1 without F11,2016,Lionel Messi,0.0,1.0,2.0,1.0
+M1 without F11,2016,Gianluigi Buffon,0.0,22.0,9.0,-13.0
+M1 without F11,2018,Ivan Rakitić,1.0,23.0,19.0,-4.0
+M1 without F11,2018,Cristiano Ronaldo,1.0,1.0,2.0,1.0
+M1 without F11,2018,Sergio Agüero,1.0,20.0,16.0,-4.0
+M1 without F11,2018,Paul Pogba,1.0,15.0,15.0,0.0
+M1 without F11,2018,Mohamed Salah,1.0,17.0,6.0,-11.0
+M1 without F11,2018,Neymar,1.0,4.0,12.0,8.0
+M1 without F11,2018,N'Golo Kanté,1.0,19.0,11.0,-8.0
+M1 without F11,2018,Edinson Cavani,1.0,13.0,22.0,9.0
+M1 without F11,2018,Alisson,1.0,28.0,25.0,-3.0
+M1 without F11,2018,Mario Mandžukić,1.0,18.0,25.0,7.0
+M1 without F11,2018,Hugo Lloris,1.0,25.0,29.0,4.0
+M1 without F11,2018,Sadio Mané,1.0,24.0,22.0,-2.0
+M1 without F11,2018,Eden Hazard,1.0,16.0,8.0,-8.0
+M1 without F11,2018,Diego Godín,1.0,30.0,28.0,-2.0
+M1 without F11,2018,Kylian Mbappé,1.0,3.0,4.0,1.0
+M1 without F11,2018,Luis Suárez,1.0,10.0,13.0,3.0
+M1 without F11,2018,Kevin De Bruyne,1.0,22.0,9.0,-13.0
+M1 without F11,2018,Marcelo,1.0,6.0,22.0,16.0
+M1 without F11,2018,Antoine Griezmann,1.0,5.0,3.0,-2.0
+M1 without F11,2018,Sergio Ramos,1.0,11.0,19.0,8.0
+M1 without F11,2018,Luka Modrić,1.0,8.0,1.0,-7.0
+M1 without F11,2018,Raphaël Varane,1.0,12.0,7.0,-5.0
+M1 without F11,2018,Roberto Firmino,1.0,26.0,19.0,-7.0
+M1 without F11,2018,Lionel Messi,1.0,2.0,5.0,3.0
+M1 without F11,2018,Thibaut Courtois,1.0,27.0,14.0,-13.0
+M1 without F11,2018,Isco,1.0,9.0,29.0,20.0
+M1 without F11,2018,Harry Kane,1.0,21.0,10.0,-11.0
+M1 without F11,2019,Sergio Agüero,0.0,7.0,16.0,9.0
+M1 without F11,2019,Alisson,0.0,12.0,7.0,-5.0
+M1 without F11,2019,Marquinhos,0.0,26.0,28.0,2.0
+M1 without F11,2019,Roberto Firmino,0.0,3.0,17.0,14.0
+M1 without F11,2019,Lionel Messi,0.0,1.0,1.0,0.0
+M1 without F11,2021,Cristiano Ronaldo,0.0,3.0,6.0,3.0
+M1 without F11,2021,Neymar,0.0,6.0,16.0,10.0
+M1 without F11,2021,Robert Lewandowski,0.0,4.0,2.0,-2.0
+M1 without F11,2021,N'Golo Kanté,0.0,15.0,5.0,-10.0
+M1 without F11,2021,Karim Benzema,0.0,7.0,4.0,-3.0
+M1 without F11,2021,Nicolò Barella,0.0,19.0,26.0,7.0
+M1 without F11,2021,Leonardo Bonucci,0.0,21.0,14.0,-7.0
+M1 without F11,2021,Gianluigi Donnarumma,0.0,20.0,10.0,-10.0
+M1 without F11,2021,Simon Kjær,0.0,30.0,17.0,-13.0
+M1 without F11,2021,Lautaro Martínez,0.0,9.0,21.0,12.0
+M1 without F11,2021,Rúben Dias,0.0,29.0,26.0,-3.0
+M1 without F11,2021,Kylian Mbappé,0.0,2.0,9.0,7.0
+M1 without F11,2021,Luis Suárez,0.0,24.0,17.0,-7.0
+M1 without F11,2021,Cesar Azpilicueta,0.0,22.0,29.0,7.0
+M1 without F11,2021,Phil Foden,0.0,13.0,25.0,12.0
+M1 without F11,2021,Raheem Sterling,0.0,16.0,15.0,-1.0
+M1 without F11,2021,Romelu Lukaku,0.0,14.0,12.0,-2.0
+M1 without F11,2021,Kevin De Bruyne,0.0,8.0,8.0,0.0
+M1 without F11,2021,Mason Mount,0.0,11.0,19.0,8.0
+M1 without F11,2021,Jorginho,0.0,17.0,3.0,-14.0
+M1 without F11,2021,Luka Modrić,0.0,25.0,29.0,4.0
+M1 without F11,2021,Bruno Fernandes,0.0,26.0,21.0,-5.0
+M1 without F11,2021,Gerard Moreno,0.0,23.0,26.0,3.0
+M1 without F11,2021,Lionel Messi,0.0,1.0,1.0,0.0
+M1 without F11,2021,Pedri,0.0,27.0,24.0,-3.0
+M1 without F11,2021,Giorgio Chiellini,0.0,28.0,12.0,-16.0
+M1 without F11,2021,Harry Kane,0.0,18.0,23.0,5.0
+M1 without F11,2023,Robert Lewandowski,1.0,12.0,12.0,0.0
+M1 without F11,2023,Bernardo Silva,1.0,11.0,9.0,-2.0
+M1 without F11,2023,İlkay Gündoğan,1.0,9.0,14.0,5.0
+M1 without F11,2023,André Onana,1.0,23.0,23.0,0.0
+M1 without F11,2023,Rodri,1.0,8.0,5.0,-3.0
+M1 without F11,2023,Lautaro Martínez,1.0,10.0,19.0,9.0
+M1 without F11,2023,Rúben Dias,1.0,15.0,26.0,11.0
+M1 without F11,2023,Kylian Mbappé,1.0,4.0,3.0,-1.0
+M1 without F11,2023,Kim Min-jae,1.0,29.0,22.0,-7.0
+M1 without F11,2023,Vinícius Júnior,1.0,5.0,6.0,1.0
+M1 without F11,2023,Emiliano Martínez,1.0,19.0,15.0,-4.0
+M1 without F11,2023,Yassine Bounou,1.0,30.0,13.0,-17.0
+M1 without F11,2023,Kevin De Bruyne,1.0,3.0,4.0,1.0
+M1 without F11,2023,Antoine Griezmann,1.0,16.0,19.0,3.0
+M1 without F11,2023,Luka Modrić,1.0,14.0,10.0,-4.0
+M1 without F11,2023,Bukayo Saka,1.0,22.0,24.0,2.0
+M1 without F11,2023,Julián Álvarez,1.0,7.0,7.0,0.0
+M1 without F11,2023,Randal Kolo Muani,1.0,27.0,26.0,-1.0
+M1 without F11,2023,Lionel Messi,1.0,1.0,1.0,0.0
+M1 without F11,2023,Jude Bellingham,1.0,25.0,18.0,-7.0
+M1 without F11,2023,Joško Gvardiol,1.0,28.0,24.0,-4.0
+M1 without F11,2023,Jamal Musiala,1.0,21.0,26.0,5.0
+M1 without F11,2023,Harry Kane,1.0,17.0,19.0,2.0
+M1 without F11,2024,Nico Williams,0.0,10.0,15.0,5.0
+M1 without F11,2024,Lamine Yamal,0.0,16.0,8.0,-8.0
+M1 without F11,2024,Dani Carvajal,0.0,8.0,4.0,-4.0
+M1 without F11,2024,Toni Kroos,0.0,9.0,9.0,0.0
+M1 without F11,2024,Federico Valverde,0.0,14.0,17.0,3.0
+M1 without F11,2024,Dani Olmo,0.0,11.0,13.0,2.0
+M1 without F11,2024,Artem Dovbyk,0.0,28.0,29.0,1.0
+M1 without F11,2024,Rodri,0.0,5.0,1.0,-4.0
+M1 without F11,2024,Lautaro Martínez,0.0,6.0,7.0,1.0
+M1 without F11,2024,Rúben Dias,0.0,27.0,23.0,-4.0
+M1 without F11,2024,Kylian Mbappé,0.0,1.0,6.0,5.0
+M1 without F11,2024,Vinícius Júnior,0.0,2.0,2.0,0.0
+M1 without F11,2024,Declan Rice,0.0,26.0,26.0,0.0
+M1 without F11,2024,Phil Foden,0.0,13.0,11.0,-2.0
+M1 without F11,2024,Emiliano Martínez,0.0,12.0,18.0,6.0
+M1 without F11,2024,Granit Xhaka,0.0,17.0,16.0,-1.0
+M1 without F11,2024,William Saliba,0.0,29.0,23.0,-6.0
+M1 without F11,2024,Bukayo Saka,0.0,20.0,21.0,1.0
+M1 without F11,2024,Jude Bellingham,0.0,3.0,3.0,0.0
+M1 without F11,2024,Vitinha,0.0,22.0,26.0,4.0
+M1 without F11,2024,Hakan Çalhanoğlu,0.0,24.0,20.0,-4.0
+M1 without F11,2024,Álex Grimaldo,0.0,15.0,28.0,13.0
+M1 without F11,2024,Florian Wirtz,0.0,18.0,12.0,-6.0
+M1 without F11,2024,Antonio Rüdiger,0.0,23.0,22.0,-1.0
+M1 without F11,2024,Harry Kane,0.0,7.0,10.0,3.0
+M1 without F11,2024,Cole Palmer,0.0,19.0,25.0,6.0
+M1,2016,Manuel Neuer,0.0,12.0,20.0,8.0
+M1,2016,Cristiano Ronaldo,0.0,1.0,1.0,0.0
+M1,2016,Sergio Agüero,0.0,16.0,20.0,4.0
+M1,2016,Paul Pogba,0.0,11.0,14.0,3.0
+M1,2016,Toni Kroos,0.0,13.0,17.0,4.0
+M1,2016,Robert Lewandowski,0.0,8.0,16.0,8.0
+M1,2016,Gareth Bale,0.0,5.0,6.0,1.0
+M1,2016,Hugo Lloris,0.0,27.0,20.0,-7.0
+M1,2016,Arturo Vidal,0.0,7.0,14.0,7.0
+M1,2016,Diego Godín,0.0,30.0,20.0,-10.0
+M1,2016,Koke,0.0,29.0,20.0,-9.0
+M1,2016,Rui Patrício,0.0,24.0,12.0,-12.0
+M1,2016,Kevin De Bruyne,0.0,18.0,20.0,2.0
+M1,2016,Dimitri Payet,0.0,26.0,17.0,-9.0
+M1,2016,Thomas Müller,0.0,10.0,20.0,10.0
+M1,2016,Andrés Iniesta,0.0,15.0,20.0,5.0
+M1,2016,Antoine Griezmann,0.0,3.0,3.0,0.0
+M1,2016,Zlatan Ibrahimović,0.0,4.0,13.0,9.0
+M1,2016,Sergio Ramos,0.0,17.0,20.0,3.0
+M1,2016,Luka Modrić,0.0,19.0,17.0,-2.0
+M1,2016,Gonzalo Higuaín,0.0,23.0,20.0,-3.0
+M1,2016,Pepe,0.0,20.0,9.0,-11.0
+M1,2016,Jamie Vardy,0.0,14.0,8.0,-6.0
+M1,2016,Lionel Messi,0.0,2.0,2.0,0.0
+M1,2016,Gianluigi Buffon,0.0,21.0,9.0,-12.0
+M1,2018,Ivan Rakitić,1.0,24.0,19.0,-5.0
+M1,2018,Cristiano Ronaldo,1.0,1.0,2.0,1.0
+M1,2018,Sergio Agüero,1.0,22.0,16.0,-6.0
+M1,2018,Paul Pogba,1.0,17.0,15.0,-2.0
+M1,2018,Mohamed Salah,1.0,13.0,6.0,-7.0
+M1,2018,Neymar,1.0,6.0,12.0,6.0
+M1,2018,N'Golo Kanté,1.0,19.0,11.0,-8.0
+M1,2018,Edinson Cavani,1.0,18.0,22.0,4.0
+M1,2018,Alisson,1.0,28.0,25.0,-3.0
+M1,2018,Mario Mandžukić,1.0,20.0,25.0,5.0
+M1,2018,Hugo Lloris,1.0,25.0,29.0,4.0
+M1,2018,Sadio Mané,1.0,26.0,22.0,-4.0
+M1,2018,Eden Hazard,1.0,8.0,8.0,0.0
+M1,2018,Diego Godín,1.0,30.0,28.0,-2.0
+M1,2018,Kylian Mbappé,1.0,5.0,4.0,-1.0
+M1,2018,Luis Suárez,1.0,15.0,13.0,-2.0
+M1,2018,Kevin De Bruyne,1.0,21.0,9.0,-12.0
+M1,2018,Marcelo,1.0,7.0,22.0,15.0
+M1,2018,Antoine Griezmann,1.0,2.0,3.0,1.0
+M1,2018,Sergio Ramos,1.0,11.0,19.0,8.0
+M1,2018,Luka Modrić,1.0,4.0,1.0,-3.0
+M1,2018,Raphaël Varane,1.0,10.0,7.0,-3.0
+M1,2018,Roberto Firmino,1.0,27.0,19.0,-8.0
+M1,2018,Lionel Messi,1.0,3.0,5.0,2.0
+M1,2018,Thibaut Courtois,1.0,23.0,14.0,-9.0
+M1,2018,Isco,1.0,9.0,29.0,20.0
+M1,2018,Harry Kane,1.0,14.0,10.0,-4.0
+M1,2019,Sergio Agüero,0.0,11.0,16.0,5.0
+M1,2019,Alisson,0.0,9.0,7.0,-2.0
+M1,2019,Marquinhos,0.0,25.0,28.0,3.0
+M1,2019,Roberto Firmino,0.0,5.0,17.0,12.0
+M1,2019,Lionel Messi,0.0,1.0,1.0,0.0
+M1,2021,Cristiano Ronaldo,0.0,4.0,6.0,2.0
+M1,2021,Neymar,0.0,9.0,16.0,7.0
+M1,2021,Robert Lewandowski,0.0,8.0,2.0,-6.0
+M1,2021,N'Golo Kanté,0.0,13.0,5.0,-8.0
+M1,2021,Karim Benzema,0.0,10.0,4.0,-6.0
+M1,2021,Nicolò Barella,0.0,20.0,26.0,6.0
+M1,2021,Leonardo Bonucci,0.0,23.0,14.0,-9.0
+M1,2021,Gianluigi Donnarumma,0.0,7.0,10.0,3.0
+M1,2021,Simon Kjær,0.0,30.0,17.0,-13.0
+M1,2021,Lautaro Martínez,0.0,11.0,21.0,10.0
+M1,2021,Rúben Dias,0.0,15.0,26.0,11.0
+M1,2021,Kylian Mbappé,0.0,2.0,9.0,7.0
+M1,2021,Luis Suárez,0.0,27.0,17.0,-10.0
+M1,2021,Cesar Azpilicueta,0.0,24.0,29.0,5.0
+M1,2021,Phil Foden,0.0,17.0,25.0,8.0
+M1,2021,Raheem Sterling,0.0,18.0,15.0,-3.0
+M1,2021,Romelu Lukaku,0.0,6.0,12.0,6.0
+M1,2021,Kevin De Bruyne,0.0,14.0,8.0,-6.0
+M1,2021,Mason Mount,0.0,12.0,19.0,7.0
+M1,2021,Jorginho,0.0,5.0,3.0,-2.0
+M1,2021,Luka Modrić,0.0,25.0,29.0,4.0
+M1,2021,Bruno Fernandes,0.0,29.0,21.0,-8.0
+M1,2021,Gerard Moreno,0.0,16.0,26.0,10.0
+M1,2021,Lionel Messi,0.0,1.0,1.0,0.0
+M1,2021,Pedri,0.0,28.0,24.0,-4.0
+M1,2021,Giorgio Chiellini,0.0,26.0,12.0,-14.0
+M1,2021,Harry Kane,0.0,22.0,23.0,1.0
+M1,2023,Robert Lewandowski,1.0,14.0,12.0,-2.0
+M1,2023,Bernardo Silva,1.0,10.0,9.0,-1.0
+M1,2023,İlkay Gündoğan,1.0,11.0,14.0,3.0
+M1,2023,André Onana,1.0,23.0,23.0,0.0
+M1,2023,Rodri,1.0,5.0,5.0,0.0
+M1,2023,Lautaro Martínez,1.0,12.0,19.0,7.0
+M1,2023,Rúben Dias,1.0,16.0,26.0,10.0
+M1,2023,Kylian Mbappé,1.0,2.0,3.0,1.0
+M1,2023,Kim Min-jae,1.0,27.0,22.0,-5.0
+M1,2023,Vinícius Júnior,1.0,9.0,6.0,-3.0
+M1,2023,Emiliano Martínez,1.0,13.0,15.0,2.0
+M1,2023,Yassine Bounou,1.0,30.0,13.0,-17.0
+M1,2023,Kevin De Bruyne,1.0,6.0,4.0,-2.0
+M1,2023,Antoine Griezmann,1.0,19.0,19.0,0.0
+M1,2023,Luka Modrić,1.0,8.0,10.0,2.0
+M1,2023,Bukayo Saka,1.0,25.0,24.0,-1.0
+M1,2023,Julián Álvarez,1.0,7.0,7.0,0.0
+M1,2023,Randal Kolo Muani,1.0,28.0,26.0,-2.0
+M1,2023,Lionel Messi,1.0,1.0,1.0,0.0
+M1,2023,Jude Bellingham,1.0,17.0,18.0,1.0
+M1,2023,Joško Gvardiol,1.0,26.0,24.0,-2.0
+M1,2023,Jamal Musiala,1.0,21.0,26.0,5.0
+M1,2023,Harry Kane,1.0,20.0,19.0,-1.0
+M1,2024,Nico Williams,0.0,15.0,15.0,0.0
+M1,2024,Lamine Yamal,0.0,16.0,8.0,-8.0
+M1,2024,Dani Carvajal,0.0,10.0,4.0,-6.0
+M1,2024,Toni Kroos,0.0,11.0,9.0,-2.0
+M1,2024,Federico Valverde,0.0,13.0,17.0,4.0
+M1,2024,Dani Olmo,0.0,8.0,13.0,5.0
+M1,2024,Artem Dovbyk,0.0,30.0,29.0,-1.0
+M1,2024,Rodri,0.0,7.0,1.0,-6.0
+M1,2024,Lautaro Martínez,0.0,4.0,7.0,3.0
+M1,2024,Rúben Dias,0.0,27.0,23.0,-4.0
+M1,2024,Kylian Mbappé,0.0,1.0,6.0,5.0
+M1,2024,Vinícius Júnior,0.0,2.0,2.0,0.0
+M1,2024,Declan Rice,0.0,25.0,26.0,1.0
+M1,2024,Phil Foden,0.0,9.0,11.0,2.0
+M1,2024,Emiliano Martínez,0.0,14.0,18.0,4.0
+M1,2024,Granit Xhaka,0.0,17.0,16.0,-1.0
+M1,2024,William Saliba,0.0,28.0,23.0,-5.0
+M1,2024,Bukayo Saka,0.0,20.0,21.0,1.0
+M1,2024,Jude Bellingham,0.0,3.0,3.0,0.0
+M1,2024,Vitinha,0.0,21.0,26.0,5.0
+M1,2024,Hakan Çalhanoğlu,0.0,24.0,20.0,-4.0
+M1,2024,Álex Grimaldo,0.0,19.0,28.0,9.0
+M1,2024,Florian Wirtz,0.0,12.0,12.0,0.0
+M1,2024,Antonio Rüdiger,0.0,18.0,22.0,4.0
+M1,2024,Harry Kane,0.0,5.0,10.0,5.0
+M1,2024,Cole Palmer,0.0,22.0,25.0,3.0
+M1 with tournament interaction,2016,Manuel Neuer,0.0,12.0,20.0,8.0
+M1 with tournament interaction,2016,Cristiano Ronaldo,0.0,1.0,1.0,0.0
+M1 with tournament interaction,2016,Sergio Agüero,0.0,16.0,20.0,4.0
+M1 with tournament interaction,2016,Paul Pogba,0.0,11.0,14.0,3.0
+M1 with tournament interaction,2016,Toni Kroos,0.0,13.0,17.0,4.0
+M1 with tournament interaction,2016,Robert Lewandowski,0.0,8.0,16.0,8.0
+M1 with tournament interaction,2016,Gareth Bale,0.0,5.0,6.0,1.0
+M1 with tournament interaction,2016,Hugo Lloris,0.0,27.0,20.0,-7.0
+M1 with tournament interaction,2016,Arturo Vidal,0.0,7.0,14.0,7.0
+M1 with tournament interaction,2016,Diego Godín,0.0,30.0,20.0,-10.0
+M1 with tournament interaction,2016,Koke,0.0,29.0,20.0,-9.0
+M1 with tournament interaction,2016,Rui Patrício,0.0,24.0,12.0,-12.0
+M1 with tournament interaction,2016,Kevin De Bruyne,0.0,19.0,20.0,1.0
+M1 with tournament interaction,2016,Dimitri Payet,0.0,26.0,17.0,-9.0
+M1 with tournament interaction,2016,Thomas Müller,0.0,10.0,20.0,10.0
+M1 with tournament interaction,2016,Andrés Iniesta,0.0,14.0,20.0,6.0
+M1 with tournament interaction,2016,Antoine Griezmann,0.0,3.0,3.0,0.0
+M1 with tournament interaction,2016,Zlatan Ibrahimović,0.0,4.0,13.0,9.0
+M1 with tournament interaction,2016,Sergio Ramos,0.0,17.0,20.0,3.0
+M1 with tournament interaction,2016,Luka Modrić,0.0,18.0,17.0,-1.0
+M1 with tournament interaction,2016,Gonzalo Higuaín,0.0,23.0,20.0,-3.0
+M1 with tournament interaction,2016,Pepe,0.0,20.0,9.0,-11.0
+M1 with tournament interaction,2016,Jamie Vardy,0.0,15.0,8.0,-7.0
+M1 with tournament interaction,2016,Lionel Messi,0.0,2.0,2.0,0.0
+M1 with tournament interaction,2016,Gianluigi Buffon,0.0,22.0,9.0,-13.0
+M1 with tournament interaction,2018,Ivan Rakitić,1.0,24.0,19.0,-5.0
+M1 with tournament interaction,2018,Cristiano Ronaldo,1.0,2.0,2.0,0.0
+M1 with tournament interaction,2018,Sergio Agüero,1.0,22.0,16.0,-6.0
+M1 with tournament interaction,2018,Paul Pogba,1.0,18.0,15.0,-3.0
+M1 with tournament interaction,2018,Mohamed Salah,1.0,13.0,6.0,-7.0
+M1 with tournament interaction,2018,Neymar,1.0,6.0,12.0,6.0
+M1 with tournament interaction,2018,N'Golo Kanté,1.0,20.0,11.0,-9.0
+M1 with tournament interaction,2018,Edinson Cavani,1.0,17.0,22.0,5.0
+M1 with tournament interaction,2018,Alisson,1.0,28.0,25.0,-3.0
+M1 with tournament interaction,2018,Mario Mandžukić,1.0,19.0,25.0,6.0
+M1 with tournament interaction,2018,Hugo Lloris,1.0,25.0,29.0,4.0
+M1 with tournament interaction,2018,Sadio Mané,1.0,27.0,22.0,-5.0
+M1 with tournament interaction,2018,Eden Hazard,1.0,7.0,8.0,1.0
+M1 with tournament interaction,2018,Diego Godín,1.0,30.0,28.0,-2.0
+M1 with tournament interaction,2018,Kylian Mbappé,1.0,4.0,4.0,0.0
+M1 with tournament interaction,2018,Luis Suárez,1.0,15.0,13.0,-2.0
+M1 with tournament interaction,2018,Kevin De Bruyne,1.0,21.0,9.0,-12.0
+M1 with tournament interaction,2018,Marcelo,1.0,8.0,22.0,14.0
+M1 with tournament interaction,2018,Antoine Griezmann,1.0,1.0,3.0,2.0
+M1 with tournament interaction,2018,Sergio Ramos,1.0,12.0,19.0,7.0
+M1 with tournament interaction,2018,Luka Modrić,1.0,5.0,1.0,-4.0
+M1 with tournament interaction,2018,Raphaël Varane,1.0,9.0,7.0,-2.0
+M1 with tournament interaction,2018,Roberto Firmino,1.0,26.0,19.0,-7.0
+M1 with tournament interaction,2018,Lionel Messi,1.0,3.0,5.0,2.0
+M1 with tournament interaction,2018,Thibaut Courtois,1.0,23.0,14.0,-9.0
+M1 with tournament interaction,2018,Isco,1.0,10.0,29.0,19.0
+M1 with tournament interaction,2018,Harry Kane,1.0,14.0,10.0,-4.0
+M1 with tournament interaction,2019,Sergio Agüero,0.0,11.0,16.0,5.0
+M1 with tournament interaction,2019,Alisson,0.0,9.0,7.0,-2.0
+M1 with tournament interaction,2019,Marquinhos,0.0,24.0,28.0,4.0
+M1 with tournament interaction,2019,Roberto Firmino,0.0,5.0,17.0,12.0
+M1 with tournament interaction,2019,Lionel Messi,0.0,1.0,1.0,0.0
+M1 with tournament interaction,2021,Cristiano Ronaldo,0.0,4.0,6.0,2.0
+M1 with tournament interaction,2021,Neymar,0.0,9.0,16.0,7.0
+M1 with tournament interaction,2021,Robert Lewandowski,0.0,8.0,2.0,-6.0
+M1 with tournament interaction,2021,N'Golo Kanté,0.0,13.0,5.0,-8.0
+M1 with tournament interaction,2021,Karim Benzema,0.0,10.0,4.0,-6.0
+M1 with tournament interaction,2021,Nicolò Barella,0.0,20.0,26.0,6.0
+M1 with tournament interaction,2021,Leonardo Bonucci,0.0,24.0,14.0,-10.0
+M1 with tournament interaction,2021,Gianluigi Donnarumma,0.0,7.0,10.0,3.0
+M1 with tournament interaction,2021,Simon Kjær,0.0,30.0,17.0,-13.0
+M1 with tournament interaction,2021,Lautaro Martínez,0.0,12.0,21.0,9.0
+M1 with tournament interaction,2021,Rúben Dias,0.0,15.0,26.0,11.0
+M1 with tournament interaction,2021,Kylian Mbappé,0.0,2.0,9.0,7.0
+M1 with tournament interaction,2021,Luis Suárez,0.0,27.0,17.0,-10.0
+M1 with tournament interaction,2021,Cesar Azpilicueta,0.0,23.0,29.0,6.0
+M1 with tournament interaction,2021,Phil Foden,0.0,17.0,25.0,8.0
+M1 with tournament interaction,2021,Raheem Sterling,0.0,18.0,15.0,-3.0
+M1 with tournament interaction,2021,Romelu Lukaku,0.0,6.0,12.0,6.0
+M1 with tournament interaction,2021,Kevin De Bruyne,0.0,14.0,8.0,-6.0
+M1 with tournament interaction,2021,Mason Mount,0.0,11.0,19.0,8.0
+M1 with tournament interaction,2021,Jorginho,0.0,5.0,3.0,-2.0
+M1 with tournament interaction,2021,Luka Modrić,0.0,25.0,29.0,4.0
+M1 with tournament interaction,2021,Bruno Fernandes,0.0,29.0,21.0,-8.0
+M1 with tournament interaction,2021,Gerard Moreno,0.0,16.0,26.0,10.0
+M1 with tournament interaction,2021,Lionel Messi,0.0,1.0,1.0,0.0
+M1 with tournament interaction,2021,Pedri,0.0,28.0,24.0,-4.0
+M1 with tournament interaction,2021,Giorgio Chiellini,0.0,26.0,12.0,-14.0
+M1 with tournament interaction,2021,Harry Kane,0.0,22.0,23.0,1.0
+M1 with tournament interaction,2023,Robert Lewandowski,1.0,14.0,12.0,-2.0
+M1 with tournament interaction,2023,Bernardo Silva,1.0,10.0,9.0,-1.0
+M1 with tournament interaction,2023,İlkay Gündoğan,1.0,11.0,14.0,3.0
+M1 with tournament interaction,2023,André Onana,1.0,23.0,23.0,0.0
+M1 with tournament interaction,2023,Rodri,1.0,5.0,5.0,0.0
+M1 with tournament interaction,2023,Lautaro Martínez,1.0,12.0,19.0,7.0
+M1 with tournament interaction,2023,Rúben Dias,1.0,16.0,26.0,10.0
+M1 with tournament interaction,2023,Kylian Mbappé,1.0,2.0,3.0,1.0
+M1 with tournament interaction,2023,Kim Min-jae,1.0,28.0,22.0,-6.0
+M1 with tournament interaction,2023,Vinícius Júnior,1.0,8.0,6.0,-2.0
+M1 with tournament interaction,2023,Emiliano Martínez,1.0,13.0,15.0,2.0
+M1 with tournament interaction,2023,Yassine Bounou,1.0,30.0,13.0,-17.0
+M1 with tournament interaction,2023,Kevin De Bruyne,1.0,6.0,4.0,-2.0
+M1 with tournament interaction,2023,Antoine Griezmann,1.0,19.0,19.0,0.0
+M1 with tournament interaction,2023,Luka Modrić,1.0,9.0,10.0,1.0
+M1 with tournament interaction,2023,Bukayo Saka,1.0,25.0,24.0,-1.0
+M1 with tournament interaction,2023,Julián Álvarez,1.0,7.0,7.0,0.0
+M1 with tournament interaction,2023,Randal Kolo Muani,1.0,27.0,26.0,-1.0
+M1 with tournament interaction,2023,Lionel Messi,1.0,1.0,1.0,0.0
+M1 with tournament interaction,2023,Jude Bellingham,1.0,17.0,18.0,1.0
+M1 with tournament interaction,2023,Joško Gvardiol,1.0,26.0,24.0,-2.0
+M1 with tournament interaction,2023,Jamal Musiala,1.0,21.0,26.0,5.0
+M1 with tournament interaction,2023,Harry Kane,1.0,20.0,19.0,-1.0
+M1 with tournament interaction,2024,Nico Williams,0.0,15.0,15.0,0.0
+M1 with tournament interaction,2024,Lamine Yamal,0.0,16.0,8.0,-8.0
+M1 with tournament interaction,2024,Dani Carvajal,0.0,10.0,4.0,-6.0
+M1 with tournament interaction,2024,Toni Kroos,0.0,11.0,9.0,-2.0
+M1 with tournament interaction,2024,Federico Valverde,0.0,13.0,17.0,4.0
+M1 with tournament interaction,2024,Dani Olmo,0.0,8.0,13.0,5.0
+M1 with tournament interaction,2024,Artem Dovbyk,0.0,30.0,29.0,-1.0
+M1 with tournament interaction,2024,Rodri,0.0,7.0,1.0,-6.0
+M1 with tournament interaction,2024,Lautaro Martínez,0.0,4.0,7.0,3.0
+M1 with tournament interaction,2024,Rúben Dias,0.0,27.0,23.0,-4.0
+M1 with tournament interaction,2024,Kylian Mbappé,0.0,1.0,6.0,5.0
+M1 with tournament interaction,2024,Vinícius Júnior,0.0,2.0,2.0,0.0
+M1 with tournament interaction,2024,Declan Rice,0.0,25.0,26.0,1.0
+M1 with tournament interaction,2024,Phil Foden,0.0,9.0,11.0,2.0
+M1 with tournament interaction,2024,Emiliano Martínez,0.0,14.0,18.0,4.0
+M1 with tournament interaction,2024,Granit Xhaka,0.0,18.0,16.0,-2.0
+M1 with tournament interaction,2024,William Saliba,0.0,28.0,23.0,-5.0
+M1 with tournament interaction,2024,Bukayo Saka,0.0,20.0,21.0,1.0
+M1 with tournament interaction,2024,Jude Bellingham,0.0,3.0,3.0,0.0
+M1 with tournament interaction,2024,Vitinha,0.0,21.0,26.0,5.0
+M1 with tournament interaction,2024,Hakan Çalhanoğlu,0.0,24.0,20.0,-4.0
+M1 with tournament interaction,2024,Álex Grimaldo,0.0,19.0,28.0,9.0
+M1 with tournament interaction,2024,Florian Wirtz,0.0,12.0,12.0,0.0
+M1 with tournament interaction,2024,Antonio Rüdiger,0.0,17.0,22.0,5.0
+M1 with tournament interaction,2024,Harry Kane,0.0,5.0,10.0,5.0
+M1 with tournament interaction,2024,Cole Palmer,0.0,22.0,25.0,3.0

@@ -67,8 +67,12 @@ class SimInputs:
     n_jurors: int
 
 
+def load_juror_inputs_from(path: Path) -> pd.DataFrame:
+    return pd.read_csv(path, usecols=list(JUROR_COLUMNS))
+
+
 def load_juror_inputs(root: Path) -> pd.DataFrame:
-    return pd.read_csv(root / T1_FILE, usecols=list(JUROR_COLUMNS))
+    return load_juror_inputs_from(root / T1_FILE)
 
 
 def player_confederation(nationality: str) -> str:

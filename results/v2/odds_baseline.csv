@@ -1,0 +1,8 @@
+edition,captured_at,capture_phase,days_before_t1,n_quoted,n_quoted_with_votes,market_favourite,actual_winner,favourite_is_winner,model_pick_all_30,model_pick_is_winner,model_pick_among_quoted,market_loglik,model_loglik,market_loglik_per_voted,model_loglik_per_voted,model_minus_market_per_voted
+2016,2016-10-24,before_t1,18,4,4,Cristiano Ronaldo,Cristiano Ronaldo,True,Cristiano Ronaldo,True,Cristiano Ronaldo,-2.1237297441765772,-1.191805424793052,-0.5309324360441443,-0.297951356198263,0.2329810798458813
+2018,2018-09-25,before_t1,38,6,6,Luka Modrić,Luka Modrić,True,Cristiano Ronaldo,False,Cristiano Ronaldo,-3.855958961654698,-5.445849190351723,-0.6426598269424496,-0.9076415317252872,-0.2649817047828375
+2019,2019-10-21,before_t1,11,4,4,Virgil van Dijk,Lionel Messi,False,Lionel Messi,True,Lionel Messi,-1.8411863109418287,-1.2340512482127202,-0.4602965777354572,-0.30851281205318004,0.15178376568227714
+2021,2021-10-28,before_t1,1,6,6,Robert Lewandowski,Lionel Messi,False,Lionel Messi,True,Lionel Messi,-4.356505379116943,-10.738004850705774,-0.7260842298528237,-1.7896674751176291,-1.0635832452648053
+2024,2024-07-16,before_t1,15,5,5,Vinícius Júnior,Rodri,False,Kylian Mbappé,False,Vinícius Júnior,-2.8619489075639635,-3.2582270314318387,-0.5723897815127927,-0.6516454062863677,-0.07925562477357503
+2024,2024-08-28,t1_to_deadline,-28,6,6,Vinícius Júnior,Rodri,False,Kylian Mbappé,False,Kylian Mbappé,-4.476773582607525,-9.80056031895081,-0.7461289304345874,-1.6334267198251349,-0.8872977893905475
+2025,2025-08-06,t1_to_deadline,-24,7,7,Ousmane Dembélé,Ousmane Dembélé,True,Ousmane Dembélé,True,Ousmane Dembélé,-5.686044087706574,-7.006491580898759,-0.8122920125295107,-1.0009273686998228,-0.18863535617031207

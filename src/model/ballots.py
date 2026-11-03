@@ -158,11 +158,16 @@ class BiasFit:
     editions: tuple[int, ...]
     alpha: dict[int, np.ndarray]
     beta: np.ndarray
-    covariance: np.ndarray  # N_BETA x N_BETA, inverse penalised Hessian restricted to beta
+    covariance: np.ndarray  # indicators x indicators, inverse penalised Hessian restricted to beta
     log_likelihood: float
 
 
 def edition_ballots(ballots: pd.DataFrame, edition: int) -> EditionBallots:
+    return edition_ballots_for(ballots, edition, INDICATORS, len(SCHEME_BY_EDITION[edition]))
+
+
+def edition_ballots_for(ballots: pd.DataFrame, edition: int, indicator_columns: tuple[str, ...], n_picks: int) -> EditionBallots:
+    """Ballot arrays for one edition with any set of juror-by-nominee indicator columns and any number of picks."""
     frame = ballots[ballots.edition == edition]
     players = tuple(sorted(frame.player_key.unique()))
     jurors = tuple(sorted(frame.juror_country_key.unique()))
@@ -170,16 +175,19 @@ def edition_ballots(ballots: pd.DataFrame, edition: int) -> EditionBallots:
     juror_index = {j: i for i, j in enumerate(jurors)}
     rows = frame.juror_country_key.map(juror_index).to_numpy()
     cols = frame.player_key.map(player_index).to_numpy()
-    indicators = np.zeros((len(jurors), len(players), N_BETA))
-    indicators[rows, cols] = frame[list(INDICATORS)].to_numpy(dtype=float)
+    indicators = np.zeros((len(jurors), len(players), len(indicator_columns)))
+    indicators[rows, cols] = frame[list(indicator_columns)].to_numpy(dtype=float)
     picked = frame[frame.pick_rank.notna()].sort_values(["juror_country_key", "pick_rank"])
-    k = len(SCHEME_BY_EDITION[edition])
-    picks = picked.player_key.map(player_index).to_numpy().reshape(len(jurors), k)
+    picks = picked.player_key.map(player_index).to_numpy().reshape(len(jurors), n_picks)
     return EditionBallots(edition=edition, player_keys=players, juror_keys=jurors, indicators=indicators, picks=picks)
 
 
 def build_edition_ballots(ballots: pd.DataFrame, editions: tuple[int, ...]) -> list[EditionBallots]:
     return [edition_ballots(ballots, e) for e in editions]
+
+
+def n_indicators(data: list[EditionBallots]) -> int:
+    return data[0].indicators.shape[2]
 
 
 def resample_ballots(data: EditionBallots, rng: np.random.Generator) -> EditionBallots:
@@ -230,7 +238,7 @@ def penalised_negative_loglik(theta: np.ndarray, data: list[EditionBallots], lam
     alphas, beta = split_theta(theta, data)
     value = 0.0
     grad_alphas: list[np.ndarray] = []
-    grad_beta = np.zeros(N_BETA)
+    grad_beta = np.zeros(n_indicators(data))
     for d, alpha in zip(data, alphas):
         loglik, grad_u = edition_loglik_and_grad_u(utilities(d, alpha, beta), d.picks)
         value -= loglik
@@ -248,7 +256,8 @@ def penalised_hessian(theta: np.ndarray, data: list[EditionBallots], lam: float)
     sizes = [len(d.player_keys) for d in data]
     bounds = np.cumsum([0, *sizes])
     n_alpha = int(bounds[-1])
-    hess = np.zeros((n_alpha + N_BETA, n_alpha + N_BETA))
+    n_beta = n_indicators(data)
+    hess = np.zeros((n_alpha + n_beta, n_alpha + n_beta))
     for i, (d, alpha) in enumerate(zip(data, alphas)):
         u = utilities(d, alpha, beta)
         curvature = np.zeros((u.shape[0], u.shape[1], u.shape[1]))
@@ -273,13 +282,14 @@ def optimise_theta(data: list[EditionBallots], lam: float, start: np.ndarray) ->
 
 
 def zero_theta(data: list[EditionBallots]) -> np.ndarray:
-    return np.zeros(sum(len(d.player_keys) for d in data) + N_BETA)
+    return np.zeros(sum(len(d.player_keys) for d in data) + n_indicators(data))
 
 
 def fit_bias_model(data: list[EditionBallots], lam: float) -> BiasFit:
     theta = optimise_theta(data, lam, zero_theta(data))
     alphas, beta = split_theta(theta, data)
-    covariance = np.linalg.inv(penalised_hessian(theta, data, lam))[-N_BETA:, -N_BETA:]
+    n_beta = n_indicators(data)
+    covariance = np.linalg.inv(penalised_hessian(theta, data, lam))[-n_beta:, -n_beta:]
     loglik = -penalised_negative_loglik(theta, data, 0.0)[0]
     return BiasFit(editions=tuple(d.edition for d in data), alpha={d.edition: a.copy() for d, a in zip(data, alphas)},
                    beta=beta.copy(), covariance=covariance, log_likelihood=float(loglik))
@@ -289,7 +299,7 @@ def bootstrap_beta(data: list[EditionBallots], lam: float, fit: BiasFit, n_boot:
     """Refit on ballots resampled within edition; returns n_boot x N_BETA, warm-started from the main fit."""
     rng = np.random.default_rng(seed)
     start = np.concatenate([fit.alpha[d.edition] for d in data] + [fit.beta])
-    draws = np.zeros((n_boot, N_BETA))
+    draws = np.zeros((n_boot, n_indicators(data)))
     for b in range(n_boot):
         resampled = [resample_ballots(d, rng) for d in data]
         draws[b] = split_theta(optimise_theta(resampled, lam, start), resampled)[1]

@@ -1,0 +1,20 @@
+# generated 2026-11-02 (experiments-v2, Stage 0)
+dataset_repo=../balon-dor-expansion  branch=expansion-2016  commit=2a4437efd4ba00f273248e2918c636ab392e3e88 (short 2a4437e, proposed tag data-v2)
+code_base_branch=juror-simulation-ballots (commit 556324e)
+sha256 data/v2/player_snapshot_t1.csv=e9a441c640650300771a2e115e0656355f72e05c108c98707c11b1c7eaf612ca
+sha256 data/v2/player_snapshot_t2.csv=7145d06fb3be343b8aa6d4155e312b34ee71a54b8490a97ccb29dcd0fae37d89
+t1_source=player_snapshot_t1_expanded.csv (identical in shape and columns to dataset processed/player_snapshot_t1.parquet)
+t2_source=dataset exports/player_snapshot_t2.csv (150 rows, 2022-2026, 146 columns)
+Python 3.12.3
+numpy==2.5.4
+pandas==3.0.6
+scikit-learn==1.9.1
+scipy==1.18.1
+xgboost==3.4.1
+lightgbm==4.7.0
+statsmodels==0.15.0
+pyarrow==26.0.0
+random_seed=7
+
+# lightgbm needed the same local libomp patch as xgboost: symlink lightgbm/lib/libomp.dylib -> sklearn/.dylibs/libomp.dylib,
+# add rpath @loader_path to lib_lightgbm.dylib, ad-hoc codesign.

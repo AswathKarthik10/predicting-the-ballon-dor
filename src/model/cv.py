@@ -7,17 +7,18 @@ import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
-from src.model import baselines
-from src.model.data import TRAIN_EDITIONS, StudyData
-from src.model.features import m1_columns, m2_columns
+from src.model import baselines, models_extra
+from src.model.data import StudyData
+from src.model.features import V1_FEATURES, FeatureSet
 from src.model.pl import Ranking, build_ranking, edition_loglik, edition_loglik_per_voted, fit_pl, fit_temperature
 
 LAMBDA_GRID = np.logspace(-2, 2, 13)
 TOP_N_OVERLAP = 3
-TRAIN_LIST = list(TRAIN_EDITIONS)
-MODEL_ORDER: tuple[str, ...] = ("U0", "B0", "B1", "B2", "X1", "M1", "M1-G", "M2")
-PL_MODELS: tuple[str, ...] = ("M1", "M1-G", "M2")
-METRIC_NAMES: tuple[str, ...] = ("heldout_ll", "spearman", "pairwise_acc", "top1_hit", "top3_overlap", "winner_rank")
+MODEL_ORDER: tuple[str, ...] = ("U0", "B0", "B1", "B2", "X1", "L1", "O1", "D1", "M1", "M1-G", "M1-F", "M2")
+PL_MODELS: tuple[str, ...] = ("M1", "M1-G", "M1-F", "M2")
+METRIC_NAMES: tuple[str, ...] = ("heldout_ll", "spearman", "pairwise_acc", "top1_hit", "top3_overlap", "winner_rank", "top10_acc", "ndcg10")
+TOP_N_ACCURACY = 10
+POST_WINDOW_MODELS: tuple[str, ...] = ("M2",)
 
 
 @dataclass(frozen=True)
@@ -28,11 +29,12 @@ class PlSpec:
     include_post: bool
 
 
-PL_SPECS: dict[str, PlSpec] = {
-    "M1": PlSpec("M1", "t1", tuple(m1_columns()), False),
-    "M1-G": PlSpec("M1-G", "t1", tuple(m1_columns()) + ("trophy_gate",), False),
-    "M2": PlSpec("M2", "t2", tuple(m2_columns()), True),
-}
+def pl_spec(features: FeatureSet, name: str) -> PlSpec:
+    include_post = name in POST_WINDOW_MODELS
+    return PlSpec(name, "t2" if include_post else "t1", features.model_columns[name], include_post)
+
+
+PL_SPECS: dict[str, PlSpec] = {name: pl_spec(V1_FEATURES, name) for name in V1_FEATURES.model_columns}
 
 
 @dataclass(frozen=True)
@@ -47,6 +49,7 @@ class FitInfo:
 @dataclass(frozen=True)
 class CvResults:
     metrics: pd.DataFrame  # model, fold, metric, value
+    heldout_utilities: dict[tuple[str, int], np.ndarray]  # (model, fold) to the held-out utilities, for the bootstrap
     coefficients: pd.DataFrame  # model, fold, feature, beta, lambda
     tuning: pd.DataFrame  # model, fold, selected hyper-parameter and temperature
     diagnostics: pd.DataFrame  # extra numbers, e.g. random forest probability sums
@@ -131,15 +134,31 @@ def predict_x1(study: StudyData, train: list[int], apply: list[int]) -> tuple[di
     return utilities, FitInfo("X1", None, None, temperature, ())
 
 
+def predict_l1(study: StudyData, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
+    utilities, temperature = calibrate_and_predict(study, models_extra.lgbm_scores, train, apply)
+    return utilities, FitInfo("L1", None, None, temperature, ())
+
+
+def predict_o1(study: StudyData, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
+    utilities, temperature = calibrate_and_predict(study, models_extra.ordinal_scores, train, apply)
+    return utilities, FitInfo("O1", None, None, temperature, ())
+
+
+def predict_d1(study: StudyData, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
+    utilities, temperature = calibrate_and_predict(study, models_extra.tree_scores, train, apply)
+    return utilities, FitInfo("D1", None, None, temperature, ())
+
+
 def predict_uniform(study: StudyData, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
     n = {ed: int(baselines.edition_mask(study, ed).sum()) for ed in apply}
     return {ed: np.zeros(n[ed]) for ed in apply}, FitInfo("U0", None, None, None, ())
 
 
 def predict_model(study: StudyData, name: str, train: list[int], apply: list[int]) -> tuple[dict[int, np.ndarray], FitInfo]:
-    if name in PL_SPECS:
-        return predict_pl(study, PL_SPECS[name], train, apply)
-    dispatch = {"U0": predict_uniform, "B0": predict_b0, "B1": predict_b1, "B2": predict_b2, "X1": predict_x1}
+    if name in study.features.model_columns:
+        return predict_pl(study, pl_spec(study.features, name), train, apply)
+    dispatch = {"U0": predict_uniform, "B0": predict_b0, "B1": predict_b1, "B2": predict_b2, "X1": predict_x1,
+                "L1": predict_l1, "O1": predict_o1, "D1": predict_d1}
     return dispatch[name](study, train, apply)
 
 
@@ -155,6 +174,13 @@ def edition_metrics(utility: np.ndarray, points: np.ndarray) -> dict[str, float]
     predicted_top = set(np.argsort(-utility, kind="stable")[:TOP_N_OVERLAP])
     has_order = np.ptp(utility) > 0  # a constant utility (the uniform reference) has no meaningful top or rank
     rho = spearmanr(utility, points)[0] if has_order else np.nan
+    predicted_order = np.argsort(-utility, kind="stable")
+    actual_order = np.argsort(-points, kind="stable")
+    n_top = min(TOP_N_ACCURACY, len(points))
+    discount = 1.0 / np.log2(np.arange(2, n_top + 2))
+    dcg = float((points[predicted_order[:n_top]] * discount).sum())
+    ideal = float((points[actual_order[:n_top]] * discount).sum())
+    top10_overlap = len(set(predicted_order[:n_top]) & set(actual_order[:n_top]))
     return {
         "heldout_ll": edition_loglik_per_voted(utility, ranking),
         "spearman": float(rho),
@@ -162,6 +188,8 @@ def edition_metrics(utility: np.ndarray, points: np.ndarray) -> dict[str, float]
         "top1_hit": float(int(np.argmax(utility)) == winner) if has_order else np.nan,
         "top3_overlap": float(len(actual_top & predicted_top)) if has_order else np.nan,
         "winner_rank": float(1 + (utility > utility[winner]).sum()) if has_order else np.nan,
+        "top10_acc": float(top10_overlap / TOP_N_ACCURACY) if has_order else np.nan,
+        "ndcg10": dcg / ideal if has_order else np.nan,
     }
 
 
@@ -170,11 +198,14 @@ def run_cross_validation(study: StudyData, model_names: list[str]) -> CvResults:
     coef_rows: list[dict[str, object]] = []
     tuning_rows: list[dict[str, object]] = []
     diag_rows: list[dict[str, object]] = []
-    for held in TRAIN_LIST:
-        train = [ed for ed in TRAIN_LIST if ed != held]
+    heldout: dict[tuple[str, int], np.ndarray] = {}
+    labelled = list(study.labelled_editions)
+    for held in labelled:
+        train = [ed for ed in labelled if ed != held]
         points = baselines.points_of(study, held)
         for name in model_names:
             utilities, info = predict_model(study, name, train, [held])
+            heldout[(name, held)] = utilities[held]
             for metric, value in edition_metrics(utilities[held], points).items():
                 metric_rows.append({"model": name, "fold": held, "metric": metric, "value": value})
             tuning_rows.append({"model": name, "fold": held, "lambda_or_alpha": info.lam, "temperature": info.temperature})
@@ -184,7 +215,7 @@ def run_cross_validation(study: StudyData, model_names: list[str]) -> CvResults:
         if "B2" in model_names:
             raw = baselines.forest_probabilities(study, train, [held])[held]
             diag_rows.append({"fold": held, "diagnostic": "rf_raw_win_probability_sum", "value": float(raw.sum())})
-    return CvResults(metrics=pd.DataFrame(metric_rows), coefficients=pd.DataFrame(coef_rows),
+    return CvResults(metrics=pd.DataFrame(metric_rows), heldout_utilities=heldout, coefficients=pd.DataFrame(coef_rows),
                      tuning=pd.DataFrame(tuning_rows), diagnostics=pd.DataFrame(diag_rows))
 
 

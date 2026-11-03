@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from src.model import features
-from src.model.data import (FORECAST_EDITION, TARGET_COLS, TRAIN_EDITIONS, StudyData, check_snapshots,
+from src.model.data import (FORECAST_EDITION, TARGET_COLS, TRAIN_EDITIONS, V1_SPEC, StudyData, check_snapshots,
                             load_study_data)
 from src.model.features import (CORE_FEATURES, POST_FEATURES, POSITION_FEATURES, apply_residualiser,
                                 assemble_features, fit_feature_params, m1_columns, m2_columns,
@@ -53,7 +53,7 @@ def test_forecast_targets_are_null_and_enforced(study: StudyData) -> None:
     t1.loc[t1["edition"] == FORECAST_EDITION, "bdo_points"] = 5.0
     t2.loc[t2["edition"] == FORECAST_EDITION, "bdo_points"] = 5.0
     with pytest.raises(ValueError, match="2026 target"):
-        check_snapshots(t1, t2)
+        check_snapshots(t1, t2, V1_SPEC)
 
 
 def test_feature_frames_contain_no_target_columns(study: StudyData) -> None:

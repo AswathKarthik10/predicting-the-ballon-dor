@@ -1,0 +1,15 @@
+feature,mean_abs_shap
+F11_individual_awards,0.4310489941702659
+F2_form_rating,0.26191386662378885
+F6_team_strength,0.22958539034668887
+F4_major_titles,0.20435878247601946
+F7_prior_standing,0.20140648594058314
+F9_fame,0.17754577078852435
+F5_other_honors,0.037150823556787005
+F1_attack,0.034341838253061835
+F10_season_attention,0.01838955071169879
+F3_big_stage,0.010872562990998685
+F12_market_value,0.0020838144230936606
+F8_defending_winner,0.0
+is_defender,0.0
+is_goalkeeper,0.0

@@ -1,0 +1,8 @@
+features,training_data,heldout_ll_2022_25,source
+v1 features,season editions only,-2.3348405384671667,results/metrics_summary.csv (v1 M1)
+v1 features,all editions,,not possible: no xG before 2021
+v2.1 features,season editions only,-2.251150491398647,E3-S
+v2.1 features,all editions,-2.244111738201105,"E3-A (v2.1, reproduced)"
+v2.1 features,calendar editions only,-2.332924386208919,E3-C
+v2 features,season editions only,-2.2772663076679773,results/v2 M1-season4
+v2 features,all editions,-2.2752950967928913,"results/v2 M1, 2022-2025 folds"

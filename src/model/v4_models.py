@@ -128,19 +128,26 @@ def tree_temperature(spec: ModelSpec, train: TrainSet, columns: np.ndarray) -> f
     return fit_temperature(scores, train.rankings)
 
 
+@dataclass(frozen=True)
+class PlFit:
+    beta: np.ndarray
+    converged: bool
+
+
+def fit_pl_beta(spec: ModelSpec, train: TrainSet) -> PlFit:
+    """Coefficients of a PL model (ridge, lasso or elastic net) on the given matrices, all columns used."""
+    start = np.zeros(train.xs[0].shape[1])
+    if spec.kind is ModelKind.RIDGE:
+        return PlFit(fit_ridge(train, spec.lam), True)
+    editions = sort_editions(train.xs, train.rankings)
+    fit = fit_pl_lasso(editions, spec.lam, start) if spec.kind is ModelKind.LASSO else fit_pl_mixed(editions, spec.lam, spec.mix, start)
+    return PlFit(fit.beta, fit.converged)
+
+
 def predict_pl(spec: ModelSpec, train: TrainSet, columns: np.ndarray, apply_xs: list[np.ndarray]) -> Prediction:
     narrowed = make_train_set(train.editions, [x[:, columns] for x in train.xs], train.points)
-    start = np.zeros(len(columns))
-    converged = True
-    if spec.kind is ModelKind.RIDGE:
-        beta = fit_ridge(narrowed, spec.lam)
-    elif spec.kind is ModelKind.LASSO:
-        fit = fit_pl_lasso(sort_editions(narrowed.xs, narrowed.rankings), spec.lam, start)
-        beta, converged = fit.beta, fit.converged
-    else:
-        fit = fit_pl_mixed(sort_editions(narrowed.xs, narrowed.rankings), spec.lam, spec.mix, start)
-        beta, converged = fit.beta, fit.converged
-    return Prediction(utilities=[x[:, columns] @ beta for x in apply_xs], temperature=1.0, converged=converged)
+    fit = fit_pl_beta(spec, narrowed)
+    return Prediction(utilities=[x[:, columns] @ fit.beta for x in apply_xs], temperature=1.0, converged=fit.converged)
 
 
 def predict_tree(spec: ModelSpec, train: TrainSet, columns: np.ndarray, apply_xs: list[np.ndarray]) -> Prediction:

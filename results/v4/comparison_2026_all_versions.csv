@@ -1,0 +1,6 @@
+version,pick,pick_p_win,Kane_predicted_rank,Kane_p_win,top3_overlap,top10_overlap,spearman_on_actual_top10
+v1,Ousmane Dembélé,0.3575,2,0.2282,2,8,0.2121212121212121
+v2 (locked),Lionel Messi,0.3114,6,0.0288,2,9,0.5636363636363636
+v2.1,Lamine Yamal,0.2974,4,0.0749,2,9,0.7454545454545454
+v3 (season only),Lamine Yamal,0.2975,4,0.1239,2,9,0.5515151515151515
+v4 (hypothesis-free),Lamine Yamal,0.1992,7,0.0472,1,8,0.12727272727272726

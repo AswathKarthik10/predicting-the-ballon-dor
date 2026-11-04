@@ -52,3 +52,21 @@ they fill gaps the spec leaves open.
   log-likelihoods (max abs gap < 1e-6) before use; players are aligned to the v4 row order by `player_key`.
 - `overfitting_gap_v4.csv` (spec 6.4) is an extra output; for the fixed v3 model the inner score is the best mean inner
   leave-one-edition-out log-likelihood over the v2 penalty grid.
+
+## Sections 7 and 8 (added with the final fit; EXPLORATORY, post-hoc)
+- **Final fit (8.1):** the same 300 configurations and one-SE rule, leave-one-edition-out over 2022-2025 (`search_log_final_v4.csv`,
+  `chosen_final_v4.csv`). Chosen: within-edition z + log1p, FS2 lasso (lambda 10) keeping 28 columns, ridge PL (lambda 21.5).
+  The best raw inner score was elastic net on all 132 columns (-2.168 against -2.263 for the chosen one); the one-SE rule traded
+  0.095 of inner log-likelihood for a much smaller feature set.
+- **Report code** handles a ridge final model only (it raises for any other), which is what was chosen.
+- **Intervals:** Laplace intervals use the ridge Hessian on the 28 selected columns (conditional on the selection). The bootstrap
+  (200 within-edition player resamples, seed 7) refits the ridge with preprocessing and selected columns held fixed. Both
+  therefore understate selection uncertainty. Coefficients are in within-edition z-score units (after log1p where flagged).
+- **Stability selection:** 100 half-samples on all four labelled editions, final preprocessing, lasso penalty = the median of every
+  lasso-type penalty chosen in the four outer folds and the final fit (1.0).
+- **Block map:** the raw-column to v3-block map in `v4_report.BLOCK_BY_COLUMN` is my reading of `features_v2.py`. Per the spec,
+  `club_minutes` and `intl_minutes` (used by v3 only as weights) count as `none`. Missing-value indicators map to the block of
+  their source column. Descriptive only.
+- **Juror simulation:** as v3 (2022-2025 ballots, 2026 jury, link re-estimated on the four outer-fold v4 utilities, 10,000 runs,
+  seed 7, no dropped jurors). Utility draws are the ridge Laplace draws on the selected columns.
+- **Top features for the 2026 top five:** summed `beta * (z - field mean)` over the five forecast leaders.

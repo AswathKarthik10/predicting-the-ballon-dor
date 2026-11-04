@@ -13,7 +13,7 @@ import numpy as np
 from src.model.pl import build_ranking, edition_loglik_per_voted
 from src.model.v4_models import ModelSpec, Prediction, model_grid, predict_utilities
 from src.model.v4_preprocess import PREPROCESS_OPTIONS, PreprocessOption, Preprocessor, fit_preprocessor, transform
-from src.model.v4_select import (LAMBDA_FS2, NOT_USED, PI_GRID, TOP_K_GRID, SelectorKind, SelectorSpec, TrainSet,
+from src.model.v4_select import (LAMBDA_FS2, NOT_USED, PI_GRID, STABILITY_PENALTY, TOP_K_GRID, SelectorKind, SelectorSpec, TrainSet,
                                  make_train_set, select_features, stability_frequencies)
 
 SEARCH_SEED = 7
@@ -106,7 +106,7 @@ def selected_columns(prepared: Prepared, train_editions: tuple[int, ...], option
         return cache.selections[key]
     frequency_key = (train_editions, option.name)
     if selector.kind is SelectorKind.STABILITY and frequency_key not in cache.frequencies:
-        cache.frequencies[frequency_key] = stability_frequencies(prepared.train)
+        cache.frequencies[frequency_key] = stability_frequencies(prepared.train, STABILITY_PENALTY)
     frequencies = cache.frequencies.get(frequency_key, np.zeros(0))
     cache.selections[key] = select_features(prepared.train, selector, frequencies)
     return cache.selections[key]

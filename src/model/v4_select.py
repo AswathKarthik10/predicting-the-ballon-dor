@@ -111,14 +111,14 @@ def half_sample_train(train: TrainSet, rng: np.random.Generator) -> TrainSet:
     return make_train_set(train.editions, [x[rows] for x, rows in zip(train.xs, keep)], [p[rows] for p, rows in zip(train.points, keep)])
 
 
-def stability_frequencies(train: TrainSet) -> np.ndarray:
+def stability_frequencies(train: TrainSet, penalty: float) -> np.ndarray:
     """Share of half-samples (players resampled within edition) in which the lasso keeps each column."""
     rng = np.random.default_rng(SEED)
     n_columns = train.xs[0].shape[1]
     counts = np.zeros(n_columns)
     for _ in range(STABILITY_RESAMPLES):
         sample = half_sample_train(train, rng)
-        fit = fit_pl_lasso(sort_editions(sample.xs, sample.rankings), STABILITY_PENALTY, np.zeros(n_columns))
+        fit = fit_pl_lasso(sort_editions(sample.xs, sample.rankings), penalty, np.zeros(n_columns))
         counts += fit.beta != 0
     return counts / STABILITY_RESAMPLES
 

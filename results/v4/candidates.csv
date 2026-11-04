@@ -1,0 +1,167 @@
+column,source_column,kind,status,reason,missing_share,n_unique
+edition,edition,raw,excluded,identifier or label,0.0,5
+snapshot,snapshot,raw,excluded,identifier or label,0.0,1
+snapshot_date,snapshot_date,raw,excluded,date or build metadata,0.0,5
+player_key,player_key,raw,excluded,identifier or label,0.0,91
+player_name,player_name,raw,excluded,identifier or label,0.0,91
+eligibility_format,eligibility_format,raw,excluded,constant within every edition,0.0,1
+ballot_picks,ballot_picks,raw,excluded,constant within every edition,0.0,2
+jurors_voted,jurors_voted,raw,excluded,constant within every edition,0.2,4
+bdo_points,bdo_points,raw,excluded,target,0.2,71
+bdo_rank,bdo_rank,raw,excluded,target,0.2,30
+vote_share,vote_share,raw,excluded,target,0.2,90
+prev_bdo_rank_partial,prev_bdo_rank_partial,raw,excluded,zero variance across all rows,0.0,1
+tourn_individual_award,tourn_individual_award,raw,excluded,provenance text,0.8533,3
+club_key,club_key,raw,excluded,identifier or label,0.0,31
+club_team_id,club_team_id,raw,excluded,identifier or label,0.0,31
+league_key,league_key,raw,excluded,identifier or label,0.0,9
+honors_source,honors_source,raw,excluded,provenance text,0.0,1
+tm_value_date,tm_value_date,raw,excluded,date or build metadata,0.0,31
+ea_update_date,ea_update_date,raw,excluded,date or build metadata,0.0067,5
+wiki_pre_days_covered,wiki_pre_days_covered,raw,excluded,zero variance across all rows,0.0,1
+news_coverage_ratio_pre,news_coverage_ratio_pre,raw,excluded,constant within every edition,0.0,4
+news_coverage_ratio_in,news_coverage_ratio_in,raw,excluded,constant within every edition,0.0,3
+jurors_same_nation,jurors_same_nation,raw,excluded,zero variance across all rows,0.0,1
+jurors_league_country,jurors_league_country,raw,excluded,zero variance across all rows,0.0,1
+built_at,built_at,raw,excluded,date or build metadata,0.0,1
+pipeline_version,pipeline_version,raw,excluded,date or build metadata,0.0,1
+nationality_Argentina,nationality,one_hot,candidate,kept,0.0,2
+nationality_Brazil,nationality,one_hot,candidate,kept,0.0,2
+nationality_England,nationality,one_hot,candidate,kept,0.0,2
+nationality_France,nationality,one_hot,candidate,kept,0.0,2
+nationality_Germany,nationality,one_hot,candidate,kept,0.0,2
+nationality_Norway,nationality,one_hot,candidate,kept,0.0,2
+nationality_Portugal,nationality,one_hot,candidate,kept,0.0,2
+nationality_Spain,nationality,one_hot,candidate,kept,0.0,2
+nationality_other,nationality,one_hot,candidate,kept,0.0,2
+position_group_DEF,position_group,one_hot,candidate,kept,0.0,2
+position_group_FWD,position_group,one_hot,candidate,kept,0.0,2
+position_group_GK,position_group,one_hot,candidate,kept,0.0,2
+position_group_MID,position_group,one_hot,candidate,kept,0.0,2
+age_at_window_end,age_at_window_end,numeric,candidate,kept,0.0,97
+is_goalkeeper,is_goalkeeper,boolean,candidate,kept,0.0,2
+prev_bdo_rank,prev_bdo_rank,numeric,candidate,kept,0.6067,28
+prev_bdo_rank_missing,prev_bdo_rank,missing_indicator,candidate,kept,0.0,2
+career_bdo_podiums_before,career_bdo_podiums_before,numeric,candidate,kept,0.0,6
+is_defending_winner,is_defending_winner,boolean,candidate,kept,0.0,2
+consecutive_podiums,consecutive_podiums,numeric,candidate,kept,0.0,2
+club_minutes,club_minutes,numeric,candidate,kept,0.0,147
+club_apps,club_apps,numeric,candidate,kept,0.0,30
+club_goals,club_goals,numeric,candidate,kept,0.0,46
+club_assists,club_assists,numeric,candidate,kept,0.0,26
+club_np_goals,club_np_goals,numeric,candidate,kept,0.0,39
+club_npxg,club_npxg,numeric,candidate,kept,0.0,144
+club_xa,club_xa,numeric,candidate,kept,0.0,144
+club_xg_coverage,club_xg_coverage,numeric,candidate,kept,0.0,91
+club_npxg_xa_p90,club_npxg_xa_p90,numeric,candidate,kept,0.0,149
+club_npxg_xa_p90_opp_adj,club_npxg_xa_p90_opp_adj,numeric,candidate,kept,0.0,150
+club_npga_p90,club_npga_p90,numeric,candidate,kept,0.0,145
+club_npga_p90_opp_adj,club_npga_p90_opp_adj,numeric,candidate,kept,0.0,150
+club_avg_rating,club_avg_rating,numeric,candidate,kept,0.0,150
+big_game_rating,big_game_rating,numeric,candidate,kept,0.02,146
+ucl_minutes,ucl_minutes,numeric,candidate,kept,0.0,121
+ucl_goal_contribs,ucl_goal_contribs,numeric,candidate,kept,0.0,18
+ucl_ko_goal_contribs,ucl_ko_goal_contribs,numeric,candidate,kept,0.0,12
+intl_minutes,intl_minutes,numeric,candidate,kept,0.0,130
+intl_goals,intl_goals,numeric,candidate,kept,0.0,15
+intl_assists,intl_assists,numeric,candidate,kept,0.0,8
+intl_xg_coverage,intl_xg_coverage,numeric,candidate,kept,0.0133,12
+intl_xg_coverage_missing,intl_xg_coverage,missing_indicator,candidate,kept,0.0,2
+intl_xg_missing,intl_xg_missing,boolean,candidate,kept,0.0,2
+intl_npxg_xa_p90,intl_npxg_xa_p90,numeric,candidate,kept,0.12,128
+intl_npxg_xa_p90_missing,intl_npxg_xa_p90,missing_indicator,candidate,kept,0.0,2
+intl_npxg_xa_p90_opp_adj,intl_npxg_xa_p90_opp_adj,numeric,candidate,kept,0.12,132
+intl_npxg_xa_p90_opp_adj_missing,intl_npxg_xa_p90_opp_adj,missing_indicator,candidate,kept,0.0,2
+intl_npga_p90,intl_npga_p90,numeric,candidate,kept,0.12,106
+intl_npga_p90_missing,intl_npga_p90,missing_indicator,candidate,kept,0.0,2
+intl_npga_p90_opp_adj,intl_npga_p90_opp_adj,numeric,candidate,kept,0.12,132
+intl_npga_p90_opp_adj_missing,intl_npga_p90_opp_adj,missing_indicator,candidate,kept,0.0,2
+tourn_name_Africa Cup of Nations,tourn_name,one_hot,candidate,kept,0.0,2
+tourn_name_EURO,tourn_name,one_hot,candidate,kept,0.0,2
+tourn_name_World Cup,tourn_name,one_hot,candidate,kept,0.0,2
+tourn_name_other,tourn_name,one_hot,candidate,kept,0.0,2
+tourn_name_missing,tourn_name,missing_indicator,candidate,kept,0.0,2
+tourn_minutes,tourn_minutes,numeric,candidate,kept,0.0,69
+tourn_goal_contribs,tourn_goal_contribs,numeric,candidate,kept,0.0,11
+tourn_ko_goal_contribs,tourn_ko_goal_contribs,numeric,candidate,kept,0.0,8
+tourn_avg_rating,tourn_avg_rating,numeric,candidate,kept,0.4467,83
+tourn_avg_rating_missing,tourn_avg_rating,missing_indicator,candidate,kept,0.0,2
+finals_played,finals_played,numeric,candidate,kept,0.0,7
+final_goal_contribs,final_goal_contribs,numeric,candidate,kept,0.0,6
+scored_winner_in_final,scored_winner_in_final,boolean,candidate,kept,0.0,2
+league_finish,league_finish,numeric,candidate,kept,0.0,10
+league_n_teams,league_n_teams,numeric,candidate,kept,0.0,3
+ucl_stage_reached_QF,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_R16,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_SF,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_final,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_league_phase,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_other,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_winner,ucl_stage_reached,one_hot,candidate,kept,0.0,2
+ucl_stage_reached_missing,ucl_stage_reached,missing_indicator,candidate,kept,0.0,2
+club_rating_window_end,club_rating_window_end,numeric,candidate,kept,0.0133,63
+club_rating_rank_window_end,club_rating_rank_window_end,numeric,candidate,kept,0.02,27
+club_rating_rank_window_end_missing,club_rating_rank_window_end,missing_indicator,candidate,kept,0.0,2
+club_rating_fallback,club_rating_fallback,boolean,candidate,kept,0.0133,2
+club_trophies_n,club_trophies_n,numeric,candidate,kept,0.0,6
+uefa_country_coeff_rank,uefa_country_coeff_rank,numeric,candidate,kept,0.02,7
+league_mean_rating,league_mean_rating,numeric,candidate,kept,0.0067,29
+nt_fifa_rank_window_end,nt_fifa_rank_window_end,numeric,candidate,kept,0.0,39
+nt_elo_window_end,nt_elo_window_end,numeric,candidate,kept,0.0,79
+nt_tourn_stage_reached_QF,nt_tourn_stage_reached,one_hot,candidate,kept,0.0,2
+nt_tourn_stage_reached_R16,nt_tourn_stage_reached,one_hot,candidate,kept,0.0,2
+nt_tourn_stage_reached_SF,nt_tourn_stage_reached,one_hot,candidate,kept,0.0,2
+nt_tourn_stage_reached_final,nt_tourn_stage_reached,one_hot,candidate,kept,0.0,2
+nt_tourn_stage_reached_group,nt_tourn_stage_reached,one_hot,candidate,kept,0.0,2
+nt_tourn_stage_reached_winner,nt_tourn_stage_reached,one_hot,candidate,kept,0.0,2
+nt_tourn_stage_reached_missing,nt_tourn_stage_reached,missing_indicator,candidate,kept,0.0,2
+won_ucl,won_ucl,boolean,candidate,kept,0.0,2
+won_league,won_league,boolean,candidate,kept,0.0,2
+won_domestic_cup,won_domestic_cup,boolean,candidate,kept,0.0,2
+won_world_cup,won_world_cup,boolean,candidate,kept,0.0,2
+won_continental,won_continental,boolean,candidate,kept,0.0,2
+won_other_uefa,won_other_uefa,boolean,candidate,kept,0.0,2
+league_poty,league_poty,boolean,candidate,kept,0.0,2
+award_wc_golden_ball,award_wc_golden_ball,numeric,candidate,kept,0.0,4
+award_wc_golden_boot,award_wc_golden_boot,numeric,candidate,kept,0.0,4
+award_wc_other,award_wc_other,boolean,candidate,kept,0.0,2
+award_continental_best_player,award_continental_best_player,boolean,candidate,kept,0.0,2
+award_continental_top_scorer,award_continental_top_scorer,boolean,candidate,kept,0.0,2
+award_ucl_player_of_season,award_ucl_player_of_season,boolean,candidate,kept,0.0,2
+award_ucl_top_scorer,award_ucl_top_scorer,boolean,candidate,kept,0.0,2
+major_individual_awards_n,major_individual_awards_n,numeric,candidate,kept,0.0,4
+league_player_of_season,league_player_of_season,boolean,candidate,kept,0.0,2
+uefa_player_award,uefa_player_award,boolean,candidate,kept,0.0,2
+tm_value_eur_window_start,tm_value_eur_window_start,numeric,candidate,kept,0.0067,40
+tm_value_eur_window_start_missing,tm_value_eur_window_start,missing_indicator,candidate,kept,0.0,2
+tm_value_eur_t1,tm_value_eur_t1,numeric,candidate,kept,0.0,35
+tm_value_log_change,tm_value_log_change,numeric,candidate,kept,0.0133,72
+tm_value_log_change_missing,tm_value_log_change,missing_indicator,candidate,kept,0.0,2
+ea_overall_window_start,ea_overall_window_start,numeric,candidate,kept,0.02,24
+ea_overall_window_start_missing,ea_overall_window_start,missing_indicator,candidate,kept,0.0,2
+ea_overall_t1,ea_overall_t1,numeric,candidate,kept,0.0067,19
+ea_overall_t1_missing,ea_overall_t1,missing_indicator,candidate,kept,0.0,2
+ea_overall_change,ea_overall_change,numeric,candidate,kept,0.02,16
+ea_overall_change_missing,ea_overall_change,missing_indicator,candidate,kept,0.0,2
+wiki_views_pre,wiki_views_pre,numeric,candidate,kept,0.0,150
+wiki_views_pre_juror_w,wiki_views_pre_juror_w,numeric,candidate,kept,0.0,150
+wiki_views_in,wiki_views_in,numeric,candidate,kept,0.0,150
+wiki_views_in_juror_w,wiki_views_in_juror_w,numeric,candidate,kept,0.0,150
+wiki_views_in_last30,wiki_views_in_last30,numeric,candidate,kept,0.0,150
+news_vol_pre,news_vol_pre,numeric,candidate,kept,0.0,150
+news_vol_pre_juror_w,news_vol_pre_juror_w,numeric,candidate,kept,0.0,150
+news_vol_in,news_vol_in,numeric,candidate,kept,0.0,150
+news_vol_in_juror_w,news_vol_in_juror_w,numeric,candidate,kept,0.0,150
+news_tone_in,news_tone_in,numeric,candidate,kept,0.0,150
+news_headlines_scored_in,news_headlines_scored_in,numeric,candidate,kept,0.0,142
+jurors_same_confed,jurors_same_confed,numeric,candidate,kept,0.0,8
+teammates_on_shortlist,teammates_on_shortlist,numeric,candidate,kept,0.0,8
+nat_teammates_on_shortlist,nat_teammates_on_shortlist,numeric,candidate,kept,0.0,6
+big_game_rating_missing,big_game_rating,missing_indicator,excluded,constant on labelled rows,0.0,1
+league_finish_partial,league_finish_partial,boolean,excluded,constant on labelled rows,0.0,1
+club_rating_window_end_missing,club_rating_window_end,missing_indicator,excluded,constant on labelled rows,0.0,1
+club_rating_fallback_missing,club_rating_fallback,missing_indicator,excluded,constant on labelled rows,0.0,1
+uefa_country_coeff_rank_missing,uefa_country_coeff_rank,missing_indicator,excluded,constant on labelled rows,0.0,1
+league_mean_rating_missing,league_mean_rating,missing_indicator,excluded,constant on labelled rows,0.0,1
+nt_tourn_stage_reached_other,nt_tourn_stage_reached,one_hot,excluded,constant on labelled rows,0.0,1
+ucl_back_to_back,ucl_back_to_back,boolean,excluded,constant on labelled rows,0.0,1

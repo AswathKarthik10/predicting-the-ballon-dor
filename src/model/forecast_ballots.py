@@ -79,3 +79,24 @@ def sensitivity_table(full: dict[str, pd.DataFrame], dropped: dict[str, pd.DataF
         merged.insert(0, "snapshot", snapshot)
         rows.append(merged)
     return pd.concat(rows, ignore_index=True)
+
+
+def forecast_without_player(study: StudyData, fit: inference.FinalFit, inputs: jurors.SimInputs, params: BallotParams, player_key: str,
+                            n_sims: int, seed: int) -> pd.DataFrame:
+    """Counterfactual: the player is removed from every ballot, so the remaining nominees compete. Same draws as the main forecast."""
+    keys = study.frame_t1[study.frame_t1["edition"] == FORECAST_EDITION][["player_key", "player_name", "nationality"]].reset_index(drop=True)
+    keep = np.flatnonzero(keys["player_key"].to_numpy() != player_key)
+    if len(keep) != len(keys) - 1:
+        raise ValueError(f"player_key {player_key!r} is not a unique 2026 nominee")
+    reduced = jurors.SimInputs(nation_match=inputs.nation_match[:, keep], confed_match=inputs.confed_match[:, keep],
+                               league_match=inputs.league_match[:, keep], n_jurors=inputs.n_jurors)
+    rng = np.random.default_rng(seed)
+    utilities = (inference.laplace_draws(fit, n_sims, rng) @ fit.matrices[FORECAST_EDITION].T)[:, keep]
+    betas = rng.multivariate_normal(params.beta, params.beta_covariance, size=n_sims)
+    config = simulate.BallotSimConfig(k=params.link_fit.k, sigma_shared=params.link_fit.sigma_shared,
+                                      scheme=bl.SCHEME_BY_EDITION[FORECAST_EDITION], n_dropped=0)
+    summary = simulate.summarise(simulate.simulate_ballots(utilities, betas, reduced, config, rng))
+    table = pd.concat([keys.iloc[keep].reset_index(drop=True), summary], axis=1)
+    table = table.sort_values(["expected_rank", "p_win"], ascending=[True, False]).reset_index(drop=True)
+    table.insert(0, "forecast_rank", np.arange(1, len(table) + 1))
+    return table

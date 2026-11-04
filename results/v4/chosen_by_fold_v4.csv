@@ -1,0 +1,5 @@
+outer_fold,preprocessing,selector,selector_k,selector_lambda,selector_pi,model,model_lambda,model_mix,model_size,model_n_estimators,model_min_leaf,n_features,inner_mean,inner_se,outer_ll,gap_inner_minus_outer,temperature,converged,configs_searched
+2022,global_z|log1p,FS4,25,0.0,0,P-R,10.0,0.0,0,0,0,23,-2.3380202827369536,0.11956738971177928,-2.6292047686258764,0.29118448588892276,1.0,True,300
+2023,within_edition_pct|log1p,FS2,0,0.46415888336127775,0,P-EN,1.0,0.25,0,0,0,54,-2.251427542214127,0.09085048759807675,-2.1885074724945093,-0.06292006971961772,1.0,True,300
+2024,within_edition_pct|raw,FS0,0,0.0,0,P-EN,1.0,0.25,0,0,0,132,-2.3109489183604617,0.013805309489576775,-1.9048297176013915,-0.40611920075907015,1.0,True,300
+2025,within_edition_pct|raw,FS0,0,0.0,0,P-EN,1.0,0.25,0,0,0,132,-2.0711705412251957,0.08462885541118219,-2.424123055002993,0.35295251377779735,1.0,True,300

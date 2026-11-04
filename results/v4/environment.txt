@@ -1,0 +1,13 @@
+# Environment, Experiment 4
+dataset_repo_commit=d174272e4d8a1d995f83e38f0cdb3ba7730d2fad
+fact_award_events_sha256=99156c2079e9caa581b55c8bb76069f935960df8f94303fb10109608ebc0b8e3
+python=Python 3.12.3
+numpy=2.5.4
+pandas=3.0.6
+scikit-learn=1.9.1
+scipy=1.18.1
+statsmodels=0.15.0
+xgboost=3.4.1
+lightgbm=4.7.0
+pyarrow=26.0.0
+branch=experiments-v4 base=experiments-v3 base_commit=a396506
